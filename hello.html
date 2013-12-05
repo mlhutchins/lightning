@@ -24,21 +24,15 @@
             var map = new google.maps.Map(document.getElementById("map-canvas"),
             mapOptions);
             
-            // Add marker
-            var marker = new google.maps.Marker({
-                position: map.getCenter(),
-                map: map,
-                title: 'Click to zoom'
-            });
+            // Add 5 markers to the map at random locations.
+            var southWest = new google.maps.LatLng(-31.203405,125.244141);
+            var northEast = new google.maps.LatLng(-25.363882,131.044922);
             
-            // Add event listener for when the map center changed
-            google.maps.event.addListener(map, 'center_changed', function() {
-                // 3 seconds after the center of the map has changed, pan back to the
-                // marker.
-                window.setTimeout(function() {
-                map.panTo(marker.getPosition());
-                }, 3000);
-            });
+            var bounds = new google.maps.LatLngBounds(southWest,northEast);
+            map.fitBounds(bounds);
+            
+            var lngSpan = northEast.lng() - southWest.lng();
+            var latSpan = northEast.lat() - southWest.lat();
             
             // Add event listener for when a marker is clicked
             google.maps.event.addListener(marker, 'click', function() {
