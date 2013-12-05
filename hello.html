@@ -118,7 +118,7 @@
             // call the HomeControl() constructor passing
             // in this DIV.
             var homeControlDiv = document.createElement('div');
-            var homeControl = new HomeControl(homeControlDiv, map, chicago);
+            var homeControl = new HomeControl(homeControlDiv, map, myLatLng);
             
             homeControlDiv.index = 1;
             map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
