@@ -101,10 +101,10 @@ $(function(){
 
 	var ajaxObj = {//Object to save cluttering the namespace.
 		options: {
-			url: "........",//The resource that delivers loc data.
+			url: ".....",//The resource that delivers loc data.
 			dataType: "json"//The type of data tp be returned by the server.
 		},
-		delay: 10000,//(milliseconds) the interval between successive gets.
+		delay: 1000,//(milliseconds) the interval between successive gets.
 		errorCount: 0,//running total of ajax errors.
 		errorThreshold: 5,//the number of ajax errors beyond which the get cycle should cease.
 		ticker: null,//setTimeout reference - allows the get cycle to be cancelled with clearTimeout(ajaxObj.ticker);
@@ -128,7 +128,7 @@ $(function(){
 	}
 
 	setMarkers(locs);//Create markers from the initial dataset served with the document.
-	//ajaxObj.get();//Start the get cycle.
+	ajaxObj.get();//Start the get cycle.
 
 	// *******************
 	//test: simulated ajax
