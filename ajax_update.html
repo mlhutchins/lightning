@@ -109,6 +109,12 @@ $(function(){
 				}
 				//locations[key].info looks after itself.
 			}
+            
+            if(locations[key]['mag'] > 0) {
+               locations[key]['mag'] = locations[key]['mag'] - 1 
+            }
+            
+            
 		});
 	}
 
