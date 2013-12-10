@@ -107,6 +107,12 @@ $(function(){
 						new google.maps.LatLng(loc.lat, loc.lng)
 					);
 				}
+                if(loc.mag!==undefined && loc.mag > 0) {
+                    
+                    locations[key].marker.setIcon(
+                       getCircle(loc.mag)
+                    )
+                }
 				//locations[key].info looks after itself.
 			}
             
