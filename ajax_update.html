@@ -109,17 +109,18 @@ $(function(){
 				}
                 if(loc.mag!==undefined && loc.mag > 0) {
                     
+                    // Update markers
                     locations[key].marker.setIcon(
                        getCircle(loc.mag)
                     )
+                    
+                    // Reduce marker size
+                    locations[key]['mag'] = locations[key]['mag'] - .25 
                 }
-				//locations[key].info looks after itself.
+            
+                //locations[key].info looks after itself.
 			}
-            
-            if(locations[key]['mag'] > 0) {
-               locations[key]['mag'] = locations[key]['mag'] - 1 
-            }
-            
+                        
             
 		});
 	}
@@ -147,7 +148,7 @@ $(function(){
 	//Ajax master routine
 	function getMarkerData() {
 		$.ajax(ajaxObj.options)
-		  .done(setMarkers) //fires when ajax returns successfully
+		  .done(setMarkers(locations)) //fires when ajax returns successfully
 		  .fail(ajaxObj.fail) //fires when an ajax error occurs
 		  .always(ajaxObj.get); //fires after ajax success or ajax error
 	}
