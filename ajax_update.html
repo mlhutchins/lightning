@@ -22,13 +22,6 @@ $(function(){
     
 	var locations = {};//A repository for markers (and the data from which they were contructed).
 	
-	//initial dataset for markers
-	var locs = {
-		1: { info:'11111. Some random info here', lat:-37.8139, lng:144.9634, mag:5 },
-		2: { info:'22222. Some random info here', lat:46.0553, lng:14.5144, mag:3 },
-		3: { info:'33333. Some random info here', lat:-33.7333, lng:151.0833, mag:6 },
-		4: { info:'44444. Some random info here', lat:27.9798, lng:-81.731, mag:7 }
-	};
 	var map = new google.maps.Map(document.getElementById('map-canvas'), {
 		zoom: 3,
 		maxZoom: 8,
@@ -41,7 +34,6 @@ $(function(){
 	
 	var auto_remove = false;//When true, markers for all unreported locs will be removed.
 
-    
     function getCircle(magnitude) {
         return {
             path: google.maps.SymbolPath.CIRCLE,
@@ -160,27 +152,12 @@ $(function(){
 		  .done(setMarkers) //fires when ajax returns successfully
 		  .fail(ajaxObj.fail) //fires when an ajax error occurs
 		  .always(ajaxObj.get); //fires after ajax success or ajax error
+        console.log(locations)
 	}
 
-	setMarkers(locs);//Create markers from the initial dataset served with the document.
 	ajaxObj.get();//Start the get cycle.
 
-	// *******************
-	//test: simulated ajax
-	var testLocs = {
-		1: { info:'1. New Random info and new position', lat:0, lng:144.9634 },//update info and position
-		2: { lat:0, lng:14.5144 },//update position
-		3: { info:'3. New Random info' },//update info
-		5: { info:'55555. Added', lat:0, lng:60 },//add new marker
-		6: { info:'6. New Random info',lat:3, lng:15.5144, mag:6  },//update info
-		7: { info:'7. New Random info',lat:2, lng:14.5144, mag:8 },//update info
-		8: { info:'8. New Random info',lat:1, lng:12.5144, mag:2  },//update info
 
-	};
-	setTimeout(function() {
-		setMarkers(testLocs);
-	}, ajaxObj.delay);
-	// *******************
 }); 
 
 </script>
