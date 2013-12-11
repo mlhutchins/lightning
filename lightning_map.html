@@ -36,6 +36,37 @@ $(function(){
 		mapTypeId: google.maps.MapTypeId.TERRAIN
 	});
 	var infowindow = new google.maps.InfoWindow();
+    
+    var styles = [
+      {
+        "elementType": "geometry",
+        "stylers": [
+          { "lightness": -62 },
+          { "gamma": 1.37 },
+          { "saturation": -29 },
+          { "weight": 0.5 },
+          { "visibility": "on" }
+        ]
+      },{
+        "featureType": "road",
+        "stylers": [
+          { "visibility": "off" }
+        ]
+      },{
+        "featureType": "administrative",
+        "stylers": [
+          { "visibility": "off" }
+        ]
+      },{
+        "featureType": "administrative.country",
+        "stylers": [
+          { "visibility": "on" }
+        ]
+      },{
+      }
+    ];
+
+    map.setOptions({styles:styles});
 	
 	var auto_remove = false;//When true, markers for all unreported locs will be removed.
 
