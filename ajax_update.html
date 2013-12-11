@@ -45,6 +45,23 @@ $(function(){
         };
     }
     
+    function timeSize(current, stroke) {
+        
+        var startMag = 6
+        var decayTime = 2000
+        var size
+        size = startMag + ((stroke - current) / decayTime)
+        
+        if(size > startMag){
+            size = 0;
+        }
+        else if(size < 0){
+            size = 0;  
+        };
+        
+        return size
+    }
+    
 	function setMarkers(locObj) {
 		if(auto_remove) {
 			//Remove markers for all unreported locs, and the corrsponding locations entry.
