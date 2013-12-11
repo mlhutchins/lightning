@@ -63,6 +63,12 @@ $(function(){
     }
     
 	function setMarkers(locObj) {
+        
+        // Some slider, box, or function to override this currentTime variable
+        
+        var currentTime = (new Date()).getTime();
+        //var currentTime = new Date( d1.getUTCFullYear(), d1.getUTCMonth(), d1.getUTCDate(), d1.getUTCHours(), d1.getUTCMinutes(), d1.getUTCSeconds() );
+            
 		if(auto_remove) {
 			//Remove markers for all unreported locs, and the corrsponding locations entry.
 			$.each(locations, function(key) {
@@ -80,6 +86,15 @@ $(function(){
 			if(!locations[key] && loc.lat!==undefined && loc.lng!==undefined) {
 				//Marker has not yet been made (and there's enough data to create one).
 
+                if(loc.unixTime==undefined){
+                    loc.unixTime = currentTime;
+                };
+                
+                loc.mag = timeSize(currentTime, loc.unixTime);
+                
+                // Define initial lightning time difference, if occurs after currenTime set size to 0
+                // If not in JSON data default to currentTime
+                
 				//Create marker
 				loc.marker = new google.maps.Marker({
 					position: new google.maps.LatLng(loc.lat, loc.lng),
@@ -125,15 +140,16 @@ $(function(){
 				}
                 if(loc.mag!==undefined && loc.mag > 0) {
                     
+                    // Reduce marker size
+                    loc.mag = timeSize(currentTime, loc.unixTime);
+                    
                     // Update markers
                     locations[key].marker.setIcon(
                        getCircle(loc.mag)
                     )
                     
-                    // Reduce marker size
-                    locations[key]['mag'] = locations[key]['mag'] - .25 
                 }
-            
+                
                 //locations[key].info looks after itself.
 			}
                         
