@@ -22,7 +22,8 @@ $(function(){
 
    // var historyLimit = 3600 * 1000 // Time history of strokes to store in ms
     var startMag = 6 // Initial marker size
-    var decayTime = 2000 // Decay of marker (in ms)
+    var decayTime = 2 // Decay of marker (in ms)
+    var timeOffset = (new Date()).getTime()/1000 - 1371340800.18; //account for offset with test file.
     
 	var locations = {};//A repository for markers (and the data from which they were contructed).
 	
@@ -68,7 +69,7 @@ $(function(){
         
         // Some slider, box, or function to override this currentTime variable
         
-        var currentTime = (new Date()).getTime();
+        var currentTime = (new Date()).getTime()/1000 - timeOffset;
         //var currentTime = new Date( d1.getUTCFullYear(), d1.getUTCMonth(), d1.getUTCDate(), d1.getUTCHours(), d1.getUTCMinutes(), d1.getUTCSeconds() );
             
 		if(auto_remove) {
@@ -85,7 +86,7 @@ $(function(){
 
 		$.each(locObj, function(key, loc) {
                         
-			if(!locations[key] && loc.lat!==undefined && loc.lng!==undefined) {
+			if(!locations[key] && loc.lat!==undefined && loc.long!==undefined) {
 				//Marker has not yet been made (and there's enough data to create one).
 
                 if(loc.unixTime==undefined){
@@ -99,7 +100,7 @@ $(function(){
                 
 				//Create marker
 				loc.marker = new google.maps.Marker({
-					position: new google.maps.LatLng(loc.lat, loc.lng),
+					position: new google.maps.LatLng(loc.lat, loc.long),
 					map: map,
                     icon: getCircle(loc.mag)
 				});
@@ -134,17 +135,20 @@ $(function(){
 			else if(locations[key]) {
 				//Update the previous data object with the latest data.
 				$.extend(locations[key], loc);
-				if(loc.lat!==undefined && loc.lng!==undefined) {
+                
+                /*
+				if(loc.lat!==undefined && loc.long!==undefined) {
 					//Update marker position (maybe not necessary but doesn't hurt).
 					locations[key].marker.setPosition(
-						new google.maps.LatLng(loc.lat, loc.lng)
+						new google.maps.LatLng(loc.lat, loc.long)
 					);
 				}
+                */
                 
                 // Set to remove if beyond history time
                 
                 
-                if(loc.mag!==undefined && loc.mag > 0) {
+                if(loc.mag!==undefined) {
                     
                     // Reduce marker size
                     loc.mag = timeSize(currentTime, loc.unixTime);
@@ -167,10 +171,10 @@ $(function(){
 
 	var ajaxObj = {//Object to save cluttering the namespace.
 		options: {
-			url: "data/lightning.json",//The resource that delivers loc data.
+			url: "data/ae20130616.json",//The resource that delivers loc data.
 			dataType: "json"//The type of data tp be returned by the server.
 		},
-		delay: 1000,//(milliseconds) the interval between successive gets.
+		delay: 500,//(milliseconds) the interval between successive gets.
 		errorCount: 0,//running total of ajax errors.
 		errorThreshold: 5,//the number of ajax errors beyond which the get cycle should cease.
 		ticker: null,//setTimeout reference - allows the get cycle to be cancelled with clearTimeout(ajaxObj.ticker);
@@ -191,7 +195,6 @@ $(function(){
 		  .done(setMarkers) //fires when ajax returns successfully
 		  .fail(ajaxObj.fail) //fires when an ajax error occurs
 		  .always(ajaxObj.get); //fires after ajax success or ajax error
-        console.log(locations)
 	}
 
 	ajaxObj.get();//Start the get cycle.
