@@ -20,6 +20,7 @@
 <script type='text/javascript'>
 $(function(){
 
+   // var historyLimit = 3600 * 1000 // Time history of strokes to store in ms
     var startMag = 6 // Initial marker size
     var decayTime = 2000 // Decay of marker (in ms)
     
@@ -139,6 +140,10 @@ $(function(){
 						new google.maps.LatLng(loc.lat, loc.lng)
 					);
 				}
+                
+                // Set to remove if beyond history time
+                
+                
                 if(loc.mag!==undefined && loc.mag > 0) {
                     
                     // Reduce marker size
@@ -165,7 +170,7 @@ $(function(){
 			url: "data/lightning.json",//The resource that delivers loc data.
 			dataType: "json"//The type of data tp be returned by the server.
 		},
-		delay: 3000,//(milliseconds) the interval between successive gets.
+		delay: 1000,//(milliseconds) the interval between successive gets.
 		errorCount: 0,//running total of ajax errors.
 		errorThreshold: 5,//the number of ajax errors beyond which the get cycle should cease.
 		ticker: null,//setTimeout reference - allows the get cycle to be cancelled with clearTimeout(ajaxObj.ticker);
