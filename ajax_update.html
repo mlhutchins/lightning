@@ -39,7 +39,7 @@ $(function(){
 	});
 	var infowindow = new google.maps.InfoWindow();
 	
-	var auto_remove = true;//When true, markers for all unreported locs will be removed.
+	var auto_remove = false;//When true, markers for all unreported locs will be removed.
 
     
     function getCircle(magnitude) {
@@ -67,6 +67,7 @@ $(function(){
 		}
 
 		$.each(locObj, function(key, loc) {
+                        
 			if(!locations[key] && loc.lat!==undefined && loc.lng!==undefined) {
 				//Marker has not yet been made (and there's enough data to create one).
 
@@ -90,7 +91,13 @@ $(function(){
 				//Remember loc in the `locations` so its info can be displayed and so its marker can be deleted.
 				locations[key] = loc;
 			}
-			else if(locations[key] && loc.remove) {
+            
+		});
+        
+        
+        $.each(locations, function(key, loc) {
+       
+			if(locations[key] && loc.remove) {
 				//Remove marker from map
 				if(locations[key].marker) {
 					locations[key].marker.setMap(null);
@@ -123,11 +130,13 @@ $(function(){
                         
             
 		});
+        
+        
 	}
 
 	var ajaxObj = {//Object to save cluttering the namespace.
 		options: {
-			url: ".....",//The resource that delivers loc data.
+			url: "data/lightning.json",//The resource that delivers loc data.
 			dataType: "json"//The type of data tp be returned by the server.
 		},
 		delay: 3000,//(milliseconds) the interval between successive gets.
@@ -148,7 +157,7 @@ $(function(){
 	//Ajax master routine
 	function getMarkerData() {
 		$.ajax(ajaxObj.options)
-		  .done(setMarkers(locations)) //fires when ajax returns successfully
+		  .done(setMarkers) //fires when ajax returns successfully
 		  .fail(ajaxObj.fail) //fires when an ajax error occurs
 		  .always(ajaxObj.get); //fires after ajax success or ajax error
 	}
