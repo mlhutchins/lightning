@@ -19,6 +19,9 @@
 
 <script type='text/javascript'>
 $(function(){
+
+    var startMag = 6 // Initial marker size
+    var decayTime = 2000 // Decay of marker (in ms)
     
 	var locations = {};//A repository for markers (and the data from which they were contructed).
 	
@@ -47,8 +50,6 @@ $(function(){
     
     function timeSize(current, stroke) {
         
-        var startMag = 6
-        var decayTime = 2000
         var size
         size = startMag + ((stroke - current) / decayTime)
         
