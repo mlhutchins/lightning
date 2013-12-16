@@ -85,10 +85,12 @@ $(function(){
         
         size = startMag + ((stroke - current) / decayTime)
         
-        if(size > startMag || size < 0){
+        if(size > startMag){
             size = 0;
+        } else if (size < 0){
+            size = -1;
         };
-        
+            
         return size
     }
     
