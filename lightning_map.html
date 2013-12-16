@@ -13,7 +13,11 @@
     
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC20mYB0qVgC_Ic3vpry-v6rRNp0zLfkIo&sensor=false">
-    </script>    
+    </script>  
+      
+    <script type="text/javascript"
+            src="js/daynightoverlay.js">
+    </script>
 
       
 
@@ -36,6 +40,14 @@ $(function(){
 		mapTypeId: google.maps.MapTypeId.TERRAIN
 	});
 	var infowindow = new google.maps.InfoWindow();
+    
+    window.dno = new DayNightOverlay({
+                    map: map,
+                    fillColor: 'rgba(0,0,0,0.3)',
+                    date: new Date(Date.UTC(2011,0,1))
+                });
+
+    window.dateField = document.getElementById('date');
     
     var styles = [
       {
@@ -119,6 +131,10 @@ $(function(){
         // Some slider, box, or function to override this currentTime variable
         
         var currentTime = (new Date()).getTime()/1000 - timeOffset;
+        
+        // Set terminator time
+        var currentUTC = new Date(currentTime*1000);
+        dno.setDate(currentUTC);
         
         console.log(currentTime)
             
