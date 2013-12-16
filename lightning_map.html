@@ -160,7 +160,7 @@ $(function(){
 					locations[key].marker.setMap(null);
 				}
 				//Remove element from `locations`
-				delete locations[key];
+				//delete locations[key];
 			}
 			else if(locations[key]) {
 				//Update the previous data object with the latest data.
@@ -187,6 +187,10 @@ $(function(){
                     locations[key].marker.setIcon(
                        getCircle(loc.mag)
                     )
+                    // Remove marker if it becomes too old
+                    if(loc.mag == -1) {
+                     loc.remove = true;                        
+                    };
                     
                 }
                 
