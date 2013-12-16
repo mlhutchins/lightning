@@ -115,20 +115,18 @@ $(function(){
 		}
 
 		$.each(locObj, function(key, loc) {
-                        
+            
+            // Create stroke location object for each JSON entry
 			if(!locations[key] && loc.lat!==undefined && loc.long!==undefined) {
-				//Marker has not yet been made (and there's enough data to create one).
 
+                // Define initial lightning time difference, if occurs after currenTime set size to 0
+                // If not in JSON data default to currentTime
                 if(loc.unixTime==undefined){
                     loc.unixTime = currentTime;
                 };
                 
                 loc.mag = timeSize(currentTime, loc.unixTime);
                 
-                // Define initial lightning time difference, if occurs after currenTime set size to 0
-                // If not in JSON data default to currentTime
-                
-				//Create marker
 //				//Attach click listener to marker
 //				google.maps.event.addListener(loc.marker, 'click', (function(key) {
 //					return function() {
@@ -138,12 +136,6 @@ $(function(){
 //						}
 //					}
 //				})(key));
-				loc.marker = new google.maps.Marker({
-					position: new google.maps.LatLng(loc.lat, loc.long),
-					map: map,
-                    icon: getCircle(loc.mag)
-				});
-
 
 				//Remember loc in the `locations` so its info can be displayed and so its marker can be deleted.
 				locations[key] = loc;
@@ -154,6 +146,19 @@ $(function(){
         
         $.each(locations, function(key, loc) {
        
+            
+            // Only create a marker for the current time window
+            if(locations[key].marker == undefined && loc.mag > 0){
+             
+                //Create marker
+				loc.marker = new google.maps.Marker({
+					position: new google.maps.LatLng(loc.lat, loc.long),
+					map: map,
+                    icon: getCircle(loc.mag)
+				});
+                
+            };
+            
 			if(locations[key] && loc.remove) {
 				//Remove marker from map
 				if(locations[key].marker) {
@@ -166,19 +171,21 @@ $(function(){
 				//Update the previous data object with the latest data.
 				$.extend(locations[key], loc);
                 
-                
-                // Set to remove if beyond history time
-                
+                // Update the stroke size                
                 
                 if(loc.mag!==undefined) {
                     
-                    // Reduce marker size
+                    // Update stroke size
                     loc.mag = timeSize(currentTime, loc.unixTime);
                     
-                    // Update markers
-                    locations[key].marker.setIcon(
-                       getCircle(loc.mag)
-                    )
+                    // If there is a marker, update marker size
+                    if (locations[key].marker!==undefined){
+                        // Update markers
+                        locations[key].marker.setIcon(
+                           getCircle(loc.mag)
+                        )
+                    };
+                    
                     // Remove marker if it becomes too old
                     if(loc.mag == -1) {
                      loc.remove = true;                        
