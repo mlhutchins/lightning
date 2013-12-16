@@ -24,8 +24,6 @@ $(function(){
     var startMag = 6 // Initial marker size
     var decayTime = 2 // Decay of marker (in ms)
     var timeOffset = (new Date()).getTime()/1000 - 1371340800.18; //account for offset with test file.
-
-    console.log(timeOffset)
     
 	var locations = {};//A repository for markers (and the data from which they were contructed).
 	
@@ -99,7 +97,8 @@ $(function(){
         // Some slider, box, or function to override this currentTime variable
         
         var currentTime = (new Date()).getTime()/1000 - timeOffset;
-        //var currentTime = new Date( d1.getUTCFullYear(), d1.getUTCMonth(), d1.getUTCDate(), d1.getUTCHours(), d1.getUTCMinutes(), d1.getUTCSeconds() );
+        
+        console.log(currentTime)
             
 		if(auto_remove) {
 			//Remove markers for all unreported locs, and the corrsponding locations entry.
