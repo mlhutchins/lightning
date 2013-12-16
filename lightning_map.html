@@ -166,14 +166,6 @@ $(function(){
 				//Update the previous data object with the latest data.
 				$.extend(locations[key], loc);
                 
-                /*
-				if(loc.lat!==undefined && loc.long!==undefined) {
-					//Update marker position (maybe not necessary but doesn't hurt).
-					locations[key].marker.setPosition(
-						new google.maps.LatLng(loc.lat, loc.long)
-					);
-				}
-                */
                 
                 // Set to remove if beyond history time
                 
