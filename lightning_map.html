@@ -68,6 +68,26 @@ $(function(){
 
     map.setOptions({styles:styles});
 	
+    // UW Copyright
+    function UWCopyright(controlDiv) {
+        controlDiv.style.padding = '5px';
+        var logo = document.createElement('IMG');
+        logo.src = 'images/uw.gif';
+        logo.style.cursor = 'pointer';
+        controlDiv.appendChild(logo);
+    
+        google.maps.event.addDomListener(logo, 'click', function() {
+            window.location = 'http://www.washington.edu'; 
+    });
+    };
+ 
+    // Add copyright to map
+    var logoControlDiv = document.createElement('DIV');
+    var logoControl = new UWCopyright(logoControlDiv);
+    logoControlDiv.index = 0; // used for ordering
+    map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(logoControlDiv);
+    
+    
 	var auto_remove = false;//When true, markers for all unreported locs will be removed.
 
     function getCircle(magnitude) {
@@ -232,7 +252,7 @@ $(function(){
 
 	ajaxObj.get();//Start the get cycle.
 
-
+    
 }); 
 
 </script>
