@@ -207,7 +207,7 @@ $(function(){
 			url: "data/ae20130616.json",//The resource that delivers loc data.
 			dataType: "json"//The type of data tp be returned by the server.
 		},
-		delay: 500,//(milliseconds) the interval between successive gets.
+		delay: 100,//(milliseconds) the interval between successive gets.
 		errorCount: 0,//running total of ajax errors.
 		errorThreshold: 5,//the number of ajax errors beyond which the get cycle should cease.
 		ticker: null,//setTimeout reference - allows the get cycle to be cancelled with clearTimeout(ajaxObj.ticker);
