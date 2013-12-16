@@ -129,21 +129,21 @@ $(function(){
                 // If not in JSON data default to currentTime
                 
 				//Create marker
+//				//Attach click listener to marker
+//				google.maps.event.addListener(loc.marker, 'click', (function(key) {
+//					return function() {
+//						if(locations[key]) {
+//							infowindow.setContent(locations[key].info);
+//							infowindow.open(map, locations[key].marker);
+//						}
+//					}
+//				})(key));
 				loc.marker = new google.maps.Marker({
 					position: new google.maps.LatLng(loc.lat, loc.long),
 					map: map,
                     icon: getCircle(loc.mag)
 				});
 
-				//Attach click listener to marker
-				google.maps.event.addListener(loc.marker, 'click', (function(key) {
-					return function() {
-						if(locations[key]) {
-							infowindow.setContent(locations[key].info);
-							infowindow.open(map, locations[key].marker);
-						}
-					}
-				})(key));
 
 				//Remember loc in the `locations` so its info can be displayed and so its marker can be deleted.
 				locations[key] = loc;
