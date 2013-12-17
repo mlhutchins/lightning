@@ -151,6 +151,7 @@ $(function(){
           })(marker, key));
     }
     
+    // Stroke marker style
     function getCircle(magnitude) {
         return {
             path: google.maps.SymbolPath.CIRCLE,
@@ -175,6 +176,8 @@ $(function(){
         return size
     }
     
+
+    // Function to set and update markers, called through AJAX
 	function setMarkers(locObj) {
         
         // Some slider, box, or function to override this currentTime variable
