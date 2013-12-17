@@ -27,7 +27,8 @@ $(function(){
     var startMag = 6 // Initial marker size
     var decayTime = 2 // Decay of marker (in ms)
     var timeOffset = 240;//(new Date()).getTime()/1000 - 1371340800.18; //account for offset with test file.
-    
+    var currentStrokes = 0 // Index of total strokes displayed
+
 	var locations = {};//A repository for markers (and the data from which they were contructed).
                 
 	var auto_remove = false;//When true, markers for all unreported locs will be removed.
@@ -191,7 +192,13 @@ $(function(){
         // Display time in info div
         var info = document.getElementById('time');
         info.innerHTML = 'Current Time Shown: ' + currentUTC;
+     
+        // Display total number of strokes
+        var info = document.getElementById('stats');
+        info.innerHTML = 'Total strokes shown: ' + currentStrokes;
+        currentStrokes = 0 // Index of total strokes displayed
 
+        
 		if(auto_remove) {
 			//Remove markers for all unreported locs, and the corrsponding locations entry.
 			$.each(locations, function(key) {
@@ -204,6 +211,7 @@ $(function(){
 			});
 		}
 
+        
 		$.each(locObj, function(key, loc) {
             
             // Create stroke location object for each JSON entry
@@ -247,6 +255,8 @@ $(function(){
                     icon: getCircle(loc.mag)
 				});
                 
+                currentStrokes = currentStrokes + 1;
+                
             };
             
 			if(locations[key] && loc.remove) {
@@ -254,6 +264,7 @@ $(function(){
 				if(locations[key].marker) {
 					locations[key].marker.setMap(null);
 				}
+                
 				//Remove element from `locations`
 				//delete locations[key];
 			}
@@ -332,5 +343,6 @@ $(function(){
   <body>
   <div id="map-canvas" style="width:100%; height:95%;"></div>
   <div id="time"></div>
+  <div id="stats"></div>
   </body>
 </html>
