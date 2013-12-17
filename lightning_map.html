@@ -108,6 +108,22 @@ $(function(){
     map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(logoControlDiv);
     
     
+    // Load WWLLN Stations
+    
+    var stations = (function() {
+            var json = null;
+            $.ajax({
+                'async': false,
+                'global': false,
+                'url': "data/stations.json",
+                'dataType': "json",
+                'success': function (data) {
+                    json = data;
+                }
+            });
+            return json;
+        })();
+            
 	var auto_remove = false;//When true, markers for all unreported locs will be removed.
 
     function getCircle(magnitude) {
