@@ -3,6 +3,8 @@ function json_generator()
 %
 %	Written by: Michael Hutchins
 
+delay = 120; %seconds
+maxStrokes = 5000; %strokes
 bPath = '/flash4/lightning/';
 jsonPath ='data/';
 
@@ -12,12 +14,12 @@ jsonFile = sprintf('%s%s',jsonPath,jsonName);
 
 data = [];
 
-oldTime = datevec(now);
+oldTime = datevec(now + 8/24 - delay/86400);
 oldTime(6) = 0;
 
 while true
 	
-	newTime = datevec(now);
+	newTime = datevec(now + 8/24 - delay/86400);
 	newTime(6) = 0;
 	
 	if datenum(oldTime) < datenum(newTime)
@@ -29,8 +31,8 @@ while true
 		
 		data = [data;newData];
 		
-		if size(data,1) > 1000
-			data = data(end - 999 : end,:);
+		if size(data,1) > maxStrokes + 1
+			data = data(end - maxStrokes : end,:);
 		end
 		
 		loc2json(data,jsonFile);
@@ -43,3 +45,4 @@ while true
 	
 end
 
+end
