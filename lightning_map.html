@@ -29,7 +29,9 @@ $(function(){
     var timeOffset = 240;//(new Date()).getTime()/1000 - 1371340800.18; //account for offset with test file.
     
 	var locations = {};//A repository for markers (and the data from which they were contructed).
-	
+                
+	var auto_remove = false;//When true, markers for all unreported locs will be removed.
+    
 	var map = new google.maps.Map(document.getElementById('map-canvas'), {
 		zoom: 3,
 		maxZoom: 8,
@@ -123,7 +125,7 @@ $(function(){
             });
             return json;
         })();
-    
+
     // Create Station markers 
 
     infowindow = new google.maps.InfoWindow(); 
