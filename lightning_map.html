@@ -123,9 +123,32 @@ $(function(){
             });
             return json;
         })();
-            
-	var auto_remove = false;//When true, markers for all unreported locs will be removed.
+    
+    // Create Station markers 
 
+    infowindow = new google.maps.InfoWindow(); 
+
+    for (var key in stations) {
+        var latlng = new google.maps.LatLng(stations[key].lat,stations[key].long)
+        var myMarkerOptions = {
+            position: latlng,
+            map: map,
+            title: stations[key].name,
+            icon: {
+              path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+              scale: 3
+            }
+        }
+        var marker = new google.maps.Marker(myMarkerOptions)
+
+          google.maps.event.addListener(marker, 'click', (function(marker, key) {
+            return function() {
+              infowindow.setContent(stations[key].name);
+              infowindow.open(map, marker);
+            }
+          })(marker, key));
+    }
+    
     function getCircle(magnitude) {
         return {
             path: google.maps.SymbolPath.CIRCLE,
