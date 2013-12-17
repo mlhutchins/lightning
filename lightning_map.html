@@ -196,8 +196,6 @@ $(function(){
         // Display total number of strokes
         var info = document.getElementById('stats');
         info.innerHTML = 'Total strokes shown: ' + currentStrokes;
-        currentStrokes = 0 // Index of total strokes displayed
-
         
 		if(auto_remove) {
 			//Remove markers for all unreported locs, and the corrsponding locations entry.
@@ -267,6 +265,8 @@ $(function(){
                 
 				//Remove element from `locations`
 				//delete locations[key];
+                currentStrokes = currentStrokes - 1;
+
 			}
 			else if(locations[key]) {
 				//Update the previous data object with the latest data.
