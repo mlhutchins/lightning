@@ -79,6 +79,15 @@ $(function(){
 
     map.setOptions({styles:styles});
 	
+    // Time Overlay
+    var myTitle = document.createElement('h1');
+    myTitle.style.color = 'white';
+    myTitle.innerHTML = 'Real Time Lightning Locations';
+    var myTextDiv = document.createElement('div');
+    myTextDiv.appendChild(myTitle);
+    map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(myTextDiv);
+    
+    
     // UW Copyright
     function UWCopyright(controlDiv) {
         controlDiv.style.padding = '5px';
