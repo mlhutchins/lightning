@@ -29,13 +29,15 @@ while true
 		
 		newData = a_import(bFile);
 		
+		newData(:,11) = 1e7 * rand(size(newData,1),1);
+
 		data = [data;newData];
 		
 		if size(data,1) > maxStrokes + 1
 			data = data(end - maxStrokes : end,:);
 		end
 		
-		loc2json(data,jsonFile);
+		loc2json(data(:,1:end-1),data(:,end),jsonFile);
 		
 		oldTime = newTime;
 		
