@@ -184,9 +184,11 @@ $(function(){
         // Set terminator time
         var currentUTC = new Date(currentTime*1000);
         dno.setDate(currentUTC);
-        
-        console.log(currentTime)
-            
+ 
+        // Display time in info div
+        var info = document.getElementById('info');
+        info.innerHTML = 'Current Time: ' + currentUTC;
+
 		if(auto_remove) {
 			//Remove markers for all unreported locs, and the corrsponding locations entry.
 			$.each(locations, function(key) {
@@ -317,7 +319,7 @@ $(function(){
 
 	ajaxObj.get();//Start the get cycle.
 
- 
+
 }); 
 
 </script>
@@ -325,7 +327,7 @@ $(function(){
   <title>WWLLN Real Time Lightning Data</title>
   </head>
   <body>
-  <div id="map-canvas" style="width:100%; height:100%;"></div>
-    </div>
+  <div id="map-canvas" style="width:100%; height:95%;"></div>
+  <div id="info"></div>
   </body>
 </html>
