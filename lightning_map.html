@@ -26,7 +26,7 @@ $(function(){
 
     var startMag = 6 // Initial marker size
     var decayTime = 2 // Decay of marker (in ms)
-    var timeOffset = (new Date()).getTime()/1000 - 1371340800.18; //account for offset with test file.
+    var timeOffset = 240;//(new Date()).getTime()/1000 - 1371340800.18; //account for offset with test file.
     
 	var locations = {};//A repository for markers (and the data from which they were contructed).
 	
@@ -239,7 +239,7 @@ $(function(){
 
 	var ajaxObj = {//Object to save cluttering the namespace.
 		options: {
-			url: "data/ae20130616.json",//The resource that delivers loc data.
+			url: "data/current.json",//The resource that delivers loc data.
 			dataType: "json"//The type of data tp be returned by the server.
 		},
 		delay: 100,//(milliseconds) the interval between successive gets.
