@@ -82,14 +82,11 @@ $(function(){
 
     map.setOptions({styles:styles});
 	
-    // Time Overlay
-    var myTitle = document.createElement('h1');
+    // Map Title
+    var myTitle = document.createElement('div');
     myTitle.style.color = 'white';
-    myTitle.innerHTML = 'Real Time Lightning Locations';
-    var myTextDiv = document.createElement('div');
-    myTextDiv.appendChild(myTitle);
-    map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(myTextDiv);
-    
+    myTitle.innerHTML = '<h1>WWLLN Real Time Lightning Locations</h1>';
+    map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(myTitle);
     
     // UW Copyright
     function UWCopyright(controlDiv) {
