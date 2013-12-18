@@ -181,6 +181,56 @@ $(function(){
         };
     }
     
+
+    
+    // Data flush button
+    // Define a property to hold the Home state
+    HomeControl.prototype.home_ = null;
+    
+    HomeControl.prototype.setHome = function(home) {
+        this.home_ = home;
+    }
+        
+    function HomeControl(controlDiv, map) {
+        
+        // Set CSS styles for the DIV containing the control
+        // Setting padding to 5 px will offset the control
+        // from the edge of the map
+        controlDiv.style.padding = '5px';
+        
+        // Set CSS for the setHome control border
+        var setHomeUI = document.createElement('div');
+        setHomeUI.style.backgroundColor = 'white';
+        setHomeUI.style.borderStyle = 'solid';
+        setHomeUI.style.borderWidth = '1px';
+        setHomeUI.style.cursor = 'pointer';
+        setHomeUI.style.textAlign = 'center';
+        setHomeUI.title = 'Click to clear current data.';
+        controlDiv.appendChild(setHomeUI);
+        
+        // Set CSS for the control interior
+        var setHomeText = document.createElement('div');
+        setHomeText.style.fontFamily = 'Arial,sans-serif';
+        setHomeText.style.fontSize = '12px';
+        setHomeText.style.paddingLeft = '4px';
+        setHomeText.style.paddingRight = '4px';
+        setHomeText.innerHTML = '<b>Clear Data</b>';
+        setHomeUI.appendChild(setHomeText);
+        
+        // Setup the click event listener for Set Home:
+        // Set the control's home to the current Map center.
+        google.maps.event.addDomListener(setHomeUI, 'click', function() {
+            auto_remove = true
+        });
+    }
+    
+    var homeControlDiv = document.createElement('div');
+    var homeControl = new HomeControl(homeControlDiv, map);
+    
+    homeControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
+
+    
     function timeSize(current, stroke) {
         
         size = startMag + ((stroke - current) / decayTime)
@@ -214,6 +264,7 @@ $(function(){
         var info = document.getElementById('stats');
         info.innerHTML = 'Total strokes shown: ' + currentStrokes;
        currentStrokes = 0; 
+        // Remove strokes if clear button pressed
 		if(auto_remove) {
 			//Remove markers for all unreported locs, and the corrsponding locations entry.
 			$.each(locations, function(key) {
@@ -224,6 +275,7 @@ $(function(){
 					delete locations[key];
 				}
 			});
+            auto_remove = false;
 		}
 
         
