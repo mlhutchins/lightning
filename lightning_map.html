@@ -633,10 +633,11 @@ $(function(){
                 
             };
             
-			if(locations[key] && loc.remove) {
+			if(locations[key] && loc.remove && locations[key].marker!==undefined) {
 				//Remove marker from map
 				if(locations[key].marker) {
 					locations[key].marker.setMap(null);
+					locations[key].marker = undefined
 				}
                 
 				//Remove element from `locations`
@@ -663,7 +664,7 @@ $(function(){
 						currentStrokes = currentStrokes + 1;
                     };
                     
-                    // Remove marker if it becomes too old
+                    // Remove marker outside of the time window
                     if(loc.mag <= 0) {
                         loc.remove = true;                        
                     } else {
