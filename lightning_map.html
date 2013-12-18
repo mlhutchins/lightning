@@ -85,8 +85,29 @@ $(function(){
     // Map Title
     var myTitle = document.createElement('div');
     myTitle.style.color = 'white';
-    myTitle.innerHTML = '<h1>WWLLN Real Time Lightning Locations</h1>';
+    myTitle.innerHTML = '<h1>Real Time Lightning Locations</h1>';
     map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(myTitle);
+    
+    // WWLLN name / link
+    function WWLLNText(controlDiv) {
+        controlDiv.style.padding = '0px';
+        var logo = document.createElement('h1');
+        logo.innerHTML = 'WWLLN&nbsp;';
+        logo.style.color = myTitle.style.color;
+        logo.style.cursor = 'pointer';
+        controlDiv.appendChild(logo);
+    
+        google.maps.event.addDomListener(logo, 'click', function() {
+            window.location = 'http://wwlln.net'; 
+    });
+    };
+ 
+    // Add Name oject to map
+    var logoControlDiv = document.createElement('DIV');
+    var logoControl = new WWLLNText(logoControlDiv);
+    logoControlDiv.index = 0; // used for ordering
+    map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(logoControlDiv);
+    
     
     // UW Copyright
     function UWCopyright(controlDiv) {
@@ -106,7 +127,6 @@ $(function(){
     var logoControl = new UWCopyright(logoControlDiv);
     logoControlDiv.index = 0; // used for ordering
     map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(logoControlDiv);
-    
     
     // Load WWLLN Stations
     
