@@ -190,51 +190,51 @@ $(function(){
 
     
     // Data flush button
-    // Define a property to hold the Home state
-    HomeControl.prototype.home_ = null;
+    // Define a property to hold the Clear state
+    ClearData.prototype.clear_ = null;
     
-    HomeControl.prototype.setHome = function(home) {
-        this.home_ = home;
+    ClearData.prototype.setClear = function(clear) {
+        this.clear_ = clear;
     }
         
-    function HomeControl(controlDiv, map) {
+    function ClearData(controlDiv, map) {
         
         // Set CSS styles for the DIV containing the control
         // Setting padding to 5 px will offset the control
         // from the edge of the map
         controlDiv.style.padding = '5px';
         
-        // Set CSS for the setHome control border
-        var setHomeUI = document.createElement('div');
-        setHomeUI.style.backgroundColor = 'white';
-        setHomeUI.style.borderStyle = 'solid';
-        setHomeUI.style.borderWidth = '1px';
-        setHomeUI.style.cursor = 'pointer';
-        setHomeUI.style.textAlign = 'center';
-        setHomeUI.title = 'Click to clear current data.';
-        controlDiv.appendChild(setHomeUI);
+        // Set CSS for the setClear control border
+        var setClearUI = document.createElement('div');
+        setClearUI.style.backgroundColor = 'white';
+        setClearUI.style.borderStyle = 'solid';
+        setClearUI.style.borderWidth = '1px';
+        setClearUI.style.cursor = 'pointer';
+        setClearUI.style.textAlign = 'center';
+        setClearUI.title = 'Click to clear current data.';
+        controlDiv.appendChild(setClearUI);
         
         // Set CSS for the control interior
-        var setHomeText = document.createElement('div');
-        setHomeText.style.fontFamily = 'Arial,sans-serif';
-        setHomeText.style.fontSize = '12px';
-        setHomeText.style.paddingLeft = '4px';
-        setHomeText.style.paddingRight = '4px';
-        setHomeText.innerHTML = '<b>Clear Data</b>';
-        setHomeUI.appendChild(setHomeText);
+        var setClearText = document.createElement('div');
+        setClearText.style.fontFamily = 'Arial,sans-serif';
+        setClearText.style.fontSize = '12px';
+        setClearText.style.paddingLeft = '4px';
+        setClearText.style.paddingRight = '4px';
+        setClearText.innerHTML = '<b>Clear Data</b>';
+        setClearUI.appendChild(setClearText);
         
-        // Setup the click event listener for Set Home:
-        // Set the control's home to the current Map center.
-        google.maps.event.addDomListener(setHomeUI, 'click', function() {
+        // Setup the click event listener for Set Clear:
+        // Set the control's clear to the current Map center.
+        google.maps.event.addDomListener(setClearUI, 'click', function() {
             auto_remove = true
         });
     }
     
-    var homeControlDiv = document.createElement('div');
-    var homeControl = new HomeControl(homeControlDiv, map);
+    var clearControlDiv = document.createElement('div');
+    var clearControl = new ClearData(clearControlDiv, map);
     
-    homeControlDiv.index = 1;
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
+    clearControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(clearControlDiv);
 
     
     function timeSize(current, stroke) {
