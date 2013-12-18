@@ -237,6 +237,153 @@ $(function(){
     map.controls[google.maps.ControlPosition.TOP_RIGHT].push(clearControlDiv);
 
     
+    
+    // Time Controls
+
+    // Play data
+    PlayData.prototype.clear_ = null;
+    
+    PlayData.prototype.setPlay = function(clear) {
+        this.clear_ = clear;
+    }
+        
+    function PlayData(controlDiv, map) {
+        
+        // Set CSS styles for the DIV containing the control
+        // Setting padding to 5 px will offset the control
+        // from the edge of the map
+        controlDiv.style.padding = '5px';
+        
+        // Set CSS for the setPlay control border
+        var setPlayUI = document.createElement('div');
+        setPlayUI.style.backgroundColor = 'white';
+        setPlayUI.style.borderStyle = 'solid';
+        setPlayUI.style.borderWidth = '1px';
+        setPlayUI.style.cursor = 'pointer';
+        setPlayUI.style.textAlign = 'center';
+        setPlayUI.title = 'Click to resume.';
+        controlDiv.appendChild(setPlayUI);
+        
+        // Set CSS for the control interior
+        var setPlayText = document.createElement('div');
+        setPlayText.style.fontFamily = 'Arial,sans-serif';
+        setPlayText.style.fontSize = '12px';
+        setPlayText.style.paddingLeft = '4px';
+        setPlayText.style.paddingRight = '4px';
+        setPlayText.innerHTML = '<b>Resume</b>';
+        setPlayUI.appendChild(setPlayText);
+        
+        // Setup the click event listener for Set Play:
+        // Set the control's play to the current Map center.
+        google.maps.event.addDomListener(setPlayUI, 'click', function() {
+            runPlay = true
+        });
+    }
+    
+    var playControlDiv = document.createElement('div');
+    var playControl = new PlayData(playControlDiv, map);
+    
+    playControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(playControlDiv);
+    
+    
+    // Pause data
+    PauseData.prototype.clear_ = null;
+    
+    PauseData.prototype.setPause = function(clear) {
+        this.clear_ = clear;
+    }
+        
+    function PauseData(controlDiv, map) {
+        
+        // Set CSS styles for the DIV containing the control
+        // Setting padding to 5 px will offset the control
+        // from the edge of the map
+        controlDiv.style.padding = '5px';
+        
+        // Set CSS for the setPause control border
+        var setPauseUI = document.createElement('div');
+        setPauseUI.style.backgroundColor = 'white';
+        setPauseUI.style.borderStyle = 'solid';
+        setPauseUI.style.borderWidth = '1px';
+        setPauseUI.style.cursor = 'pointer';
+        setPauseUI.style.textAlign = 'center';
+        setPauseUI.title = 'Click to pause playback.';
+        controlDiv.appendChild(setPauseUI);
+        
+        // Set CSS for the control interior
+        var setPauseText = document.createElement('div');
+        setPauseText.style.fontFamily = 'Arial,sans-serif';
+        setPauseText.style.fontSize = '12px';
+        setPauseText.style.paddingLeft = '4px';
+        setPauseText.style.paddingRight = '4px';
+        setPauseText.innerHTML = '<b>Pause</b>';
+        setPauseUI.appendChild(setPauseText);
+        
+        // Setup the click event listener for Set Pause:
+        // Set the control's pause to the current Map center.
+        google.maps.event.addDomListener(setPauseUI, 'click', function() {
+            pauseSet = true
+        });
+    }
+    
+    var pauseControlDiv = document.createElement('div');
+    var pauseControl = new PauseData(pauseControlDiv, map);
+    
+    pauseControlDiv.index = 2;
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(pauseControlDiv);
+    
+    
+    // Resume realtime data
+    RealData.prototype.clear_ = null;
+    
+    RealData.prototype.setReal = function(clear) {
+        this.clear_ = clear;
+    }
+        
+    function RealData(controlDiv, map) {
+        
+        // Set CSS styles for the DIV containing the control
+        // Setting padding to 5 px will offset the control
+        // from the edge of the map
+        controlDiv.style.padding = '5px';
+        
+        // Set CSS for the setReal control border
+        var setRealUI = document.createElement('div');
+        setRealUI.style.backgroundColor = 'white';
+        setRealUI.style.borderStyle = 'solid';
+        setRealUI.style.borderWidth = '1px';
+        setRealUI.style.cursor = 'pointer';
+        setRealUI.style.textAlign = 'center';
+        setRealUI.title = 'Click to reset to real-time playback.';
+        controlDiv.appendChild(setRealUI);
+        
+        // Set CSS for the control interior
+        var setRealText = document.createElement('div');
+        setRealText.style.fontFamily = 'Arial,sans-serif';
+        setRealText.style.fontSize = '12px';
+        setRealText.style.paddingLeft = '4px';
+        setRealText.style.paddingRight = '4px';
+        setRealText.innerHTML = '<b>Real-Time</b>';
+        setRealUI.appendChild(setRealText);
+        
+        // Setup the click event listener for Set Real:
+        // Set the control's real to the current Map center.
+        google.maps.event.addDomListener(setRealUI, 'click', function() {
+            runReal = true
+        });
+    }
+    
+    var realControlDiv = document.createElement('div');
+    var realControl = new RealData(realControlDiv, map);
+    
+    realControlDiv.index = 3;
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(realControlDiv);
+    
+        
+    
+    
+    
     function timeSize(current, stroke) {
         
         size = startMag + ((stroke - current) / decayTime)
