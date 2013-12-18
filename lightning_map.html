@@ -529,8 +529,12 @@ $(function(){
         google.maps.event.addDomListener(setShowUI, 'click', function() {
             if (showBox){
                 showBox = false
+                rectangle.setMap(null);   
+
             } else {
                 showBox = true
+                rectangle.setMap(map);
+
             };
         });
     }
@@ -542,6 +546,30 @@ $(function(){
     map.controls[google.maps.ControlPosition.TOP_RIGHT].push(showControlDiv);
 
     
+    // Draw and set the rectangle
+    
+    var bounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(-10, -110),
+        new google.maps.LatLng(25, -60)
+    );
+    
+    // Define the rectangle and set its editable property to true.
+    rectangle = new google.maps.Rectangle({
+        bounds: bounds,
+        editable: true,
+        draggable: true
+    });
+    
+    // Add an event listener on the rectangle.
+    google.maps.event.addListener(rectangle, 'bounds_changed', showNewRect);
+    
+
+    /** @this {google.maps.Rectangle} */
+    function showNewRect(event) {
+        var ne = rectangle.getBounds().getNorthEast();
+        var sw = rectangle.getBounds().getSouthWest();
+                
+    }
     
     
     function timeSize(current, stroke) {
