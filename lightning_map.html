@@ -638,7 +638,6 @@ $(function(){
 				if(locations[key].marker) {
 					locations[key].marker.setMap(null);
 				}
-                loc.remove = false
                 
 				//Remove element from `locations`
 				//delete locations[key];
@@ -665,8 +664,10 @@ $(function(){
                     };
                     
                     // Remove marker if it becomes too old
-                    if(loc.mag == -1) {
-                     loc.remove = true;                        
+                    if(loc.mag <= 0) {
+                        loc.remove = true;                        
+                    } else {
+                        loc.remove = false
                     };
                     
                 }
