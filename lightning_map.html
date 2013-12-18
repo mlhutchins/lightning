@@ -45,7 +45,6 @@ $(function(){
     var firstTime = 1e12;
     var auto_remove = false;//When true, markers for all unreported locs will be removed.
     var showBox = false; // Start with no subset box shown
-    
     // Internal storage
     var currentStrokes = 0 // Index of total strokes displayed
     var currentBoxStrokes = 0 // Index of strokes in box
@@ -571,6 +570,12 @@ $(function(){
                 
     }
     
+    // Check if a storke is within the rectangle bounds
+    function strokeInBounds(lat,lng){
+        var ne = rectangle.getBounds().getNorthEast();
+        var sw = rectangle.getBounds().getSouthWest();
+        return lat >= sw.lat() && lat <= ne.lat() && lng >= sw.lng() && lng <= ne.lng()  
+    }
     
     function timeSize(current, stroke) {
         
@@ -650,7 +655,12 @@ $(function(){
      
         // Display total number of strokes
         var info = document.getElementById('stats');
-        info.innerHTML = 'Total strokes shown: ' + currentStrokes;
+        if (showBox){
+            info.innerHTML = 'Total strokes shown: ' + currentStrokes + ', Strokes in selection: ' + currentBoxStrokes;
+        } else {
+            info.innerHTML = 'Total strokes shown: ' + currentStrokes;
+        };
+        
         currentStrokes = 0; 
         currentBoxStrokes = 0;
         
@@ -722,6 +732,7 @@ $(function(){
 				});
                 
                 currentStrokes = currentStrokes + 1;
+                currentBoxStrokes = currentBoxStrokes + strokeInBounds(loc.lat,loc.long)
                 
             };
             
@@ -754,6 +765,8 @@ $(function(){
                            getCircle(loc.mag)
                         )
 						currentStrokes = currentStrokes + 1;
+                        currentBoxStrokes = currentBoxStrokes + strokeInBounds(loc.lat,loc.long)
+
                     };
                     
                     // Remove marker outside of the time window
