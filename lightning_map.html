@@ -556,7 +556,9 @@ $(function(){
     rectangle = new google.maps.Rectangle({
         bounds: bounds,
         editable: true,
-        draggable: true
+        draggable: true,
+        fillOpacity: .1,
+        strokeColor: '#FFFFFF'
     });
     
     // Add an event listener on the rectangle.
