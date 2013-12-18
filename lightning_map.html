@@ -533,7 +533,7 @@ $(function(){
         } 
         if (runForward){
             pauseDelay = pauseDelay - 30
-            pauseTime = pauseTime - 30
+            pauseTime = pauseTime + 30
             if (pauseDelay < 0){
                 pauseDelay = 0
             };
@@ -543,7 +543,7 @@ $(function(){
             runForward = false
         } else if (runBackward){
             pauseDelay = pauseDelay + 30
-            pauseTime = pauseTime + 30
+            pauseTime = pauseTime - 30
             if ((currentTime - pauseDelay) < firstTime && firstTime!==1e12){
                 pauseDelay = currentTime - firstTime
             };
