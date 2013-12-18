@@ -268,12 +268,10 @@ $(function(){
 		if(auto_remove) {
 			//Remove markers for all unreported locs, and the corrsponding locations entry.
 			$.each(locations, function(key) {
-				if(!locObj[key]) {
-					if(locations[key].marker) {
-						locations[key].marker.setMap(null);
-					}
-					delete locations[key];
-				}
+                if(locations[key].marker) {
+                    locations[key].marker.setMap(null);
+                }
+                delete locations[key];
 			});
             auto_remove = false;
 		}
