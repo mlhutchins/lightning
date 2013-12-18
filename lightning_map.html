@@ -574,17 +574,7 @@ $(function(){
         fillOpacity: .1,
         strokeColor: '#FFFFFF'
     });
-    
-    // Add an event listener on the rectangle.
-    google.maps.event.addListener(rectangle, 'bounds_changed', showNewRect);
-    
 
-    /** @this {google.maps.Rectangle} */
-    function showNewRect(event) {
-        var ne = rectangle.getBounds().getNorthEast();
-        var sw = rectangle.getBounds().getSouthWest();
-                
-    }
     
     // Function to check if a stroke is within the rectangle bounds
     function strokeInBounds(lat,lng){
