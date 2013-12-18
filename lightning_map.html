@@ -452,7 +452,7 @@ $(function(){
         currentStrokes = 0; 
         
         
-        // Remove strokes if clear button pressed
+        // Remove strokes if clear button pressed, and reset pause timing
 		if(auto_remove) {
 			//Remove markers for all unreported locs, and the corrsponding locations entry.
 			$.each(locations, function(key) {
@@ -462,6 +462,7 @@ $(function(){
                 delete locations[key];
 			});
             auto_remove = false;
+            runReal = true
 		}
 
         // Only get new data if it has been at least getDelay since the last fetch
