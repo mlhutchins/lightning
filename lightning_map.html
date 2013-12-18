@@ -533,16 +533,23 @@ $(function(){
         } 
         if (runForward){
             pauseDelay = pauseDelay - 30
+            pauseTime = pauseTime - 30
             if (pauseDelay < 0){
                 pauseDelay = 0
+            };
+            if (pauseTime > currentTime){
+                pauseTime = currentTime
             };
             runForward = false
         } else if (runBackward){
             pauseDelay = pauseDelay + 30
-
+            pauseTime = pauseTime + 30
             if ((currentTime - pauseDelay) < firstTime && firstTime!==1e12){
                 pauseDelay = currentTime - firstTime
             };
+            if (pauseTime < firstTime && firstTime !== 1e12){
+                pauseTime = firstTime
+            }
             runBackward = false
         };
 
