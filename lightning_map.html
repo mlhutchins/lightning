@@ -415,9 +415,10 @@ $(function(){
         var currentTime = realTime - timeOffset;
         
         if (pauseSet){
-            pauseTime = currentTime
+            pauseTime = currentTime - pauseDelay
             runPause = true
             runReal = false
+            runPlay = false
             pauseSet = false
         }
         if (runReal){
