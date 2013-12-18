@@ -44,9 +44,11 @@ $(function(){
     var pauseTime = 0;
     var firstTime = 1e12;
     var auto_remove = false;//When true, markers for all unreported locs will be removed.
-
+    var showBox = false; // Start with no subset box shown
+    
     // Internal storage
     var currentStrokes = 0 // Index of total strokes displayed
+    var currentBoxStrokes = 0 // Index of strokes in box
     var lastGet = 0; // holds time of last server fetch
     
 	var map = new google.maps.Map(document.getElementById('map-canvas'), {
@@ -486,6 +488,61 @@ $(function(){
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(backwardControlDiv);
     
     
+    // Subset Box Activation Button
+    
+        // Data flush button
+    // Define a property to hold the Show state
+    ShowBox.prototype.show_ = null;
+    
+    ShowBox.prototype.setShow = function(show) {
+        this.show_ = show;
+    }
+        
+    function ShowBox(controlDiv, map) {
+        
+        // Set CSS styles for the DIV containing the control
+        // Setting padding to 5 px will offset the control
+        // from the edge of the map
+        controlDiv.style.padding = '5px';
+        
+        // Set CSS for the setShow control border
+        var setShowUI = document.createElement('div');
+        setShowUI.style.backgroundColor = 'white';
+        setShowUI.style.borderStyle = 'solid';
+        setShowUI.style.borderWidth = '1px';
+        setShowUI.style.cursor = 'pointer';
+        setShowUI.style.textAlign = 'center';
+        setShowUI.title = 'Click to show the selection box.';
+        controlDiv.appendChild(setShowUI);
+        
+        // Set CSS for the control interior
+        var setShowText = document.createElement('div');
+        setShowText.style.fontFamily = 'Arial,sans-serif';
+        setShowText.style.fontSize = '12px';
+        setShowText.style.paddingLeft = '4px';
+        setShowText.style.paddingRight = '4px';
+        setShowText.innerHTML = '<b>Selection Box</b>';
+        setShowUI.appendChild(setShowText);
+        
+        // Setup the click event listener for Set Show:
+        // Set the control's show to the current Map center.
+        google.maps.event.addDomListener(setShowUI, 'click', function() {
+            if (showBox){
+                showBox = false
+            } else {
+                showBox = true
+            };
+        });
+    }
+    
+    var showControlDiv = document.createElement('div');
+    var showControl = new ShowBox(showControlDiv, map);
+    
+    showControlDiv.index = 3;
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(showControlDiv);
+
+    
+    
     
     function timeSize(current, stroke) {
         
@@ -567,7 +624,7 @@ $(function(){
         var info = document.getElementById('stats');
         info.innerHTML = 'Total strokes shown: ' + currentStrokes;
         currentStrokes = 0; 
-        
+        currentBoxStrokes = 0;
         
         // Remove strokes if clear button pressed, and reset pause timing
 		if(auto_remove) {
