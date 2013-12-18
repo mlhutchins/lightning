@@ -24,20 +24,27 @@
 <script type='text/javascript'>
 $(function(){
 
+    // Initialize storage array for stroke data
+    var locations = {};//A repository for markers (and the data from which they were contructed).
+
+    // Internal map settings
     var startMag = 6 // Initial marker size
     var decayTime = 2 // Decay of marker (in ms)
     var timeOffset = 240;//(new Date()).getTime()/1000 - 1371340800.18; //account for offset with test file.
-    var currentStrokes = 0 // Index of total strokes displayed
-    var getDelay = 1 // interval between server fetches (ms)
-    var lastGet = 0; // holds time of last server fetch
-	var locations = {};//A repository for markers (and the data from which they were contructed).
+    var getDelay = 1 // interval between server fetches (s)
+    
+    // Initial tates and values for the buttons
     var runPause = false; // start off with map playing; default to no state change
     var runPlay = false; // start off playing; default to no state change
     var runReal = false; // default to no state change
+    var pauseSet = false;
     var pauseDelay = 0; // start with no pause offset
-	var auto_remove = false;//When true, markers for all unreported locs will be removed.
-    var realTime = 0;
-    var realTimeStep = 0;
+    var pauseTime = 0;
+    var auto_remove = false;//When true, markers for all unreported locs will be removed.
+
+    // Internal storage
+    var currentStrokes = 0 // Index of total strokes displayed
+    var lastGet = 0; // holds time of last server fetch
     
 	var map = new google.maps.Map(document.getElementById('map-canvas'), {
 		zoom: 3,
