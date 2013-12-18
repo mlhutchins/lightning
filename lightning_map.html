@@ -198,7 +198,21 @@ $(function(){
         };
     }
     
-
+    
+    // Function to find the stroke size based on the time difference
+    function timeSize(current, stroke) {
+        
+        size = startMag + ((stroke - current) / decayTime)
+        
+        if(size > startMag){
+            size = 0;
+        } else if (size < 0){
+            size = -1;
+        };
+            
+        return size
+    }
+    
     
     // Data flush button
     // Define a property to hold the Clear state
@@ -545,8 +559,8 @@ $(function(){
     map.controls[google.maps.ControlPosition.TOP_RIGHT].push(showControlDiv);
 
     
-    // Draw and set the rectangle
-    
+    // Create the selection box rectangle with listener for bounds change
+    // Draw and set the rectangle 
     var bounds = new google.maps.LatLngBounds(
         new google.maps.LatLng(-10, -110),
         new google.maps.LatLng(25, -60)
@@ -572,36 +586,29 @@ $(function(){
                 
     }
     
-    // Check if a storke is within the rectangle bounds
+    // Function to check if a stroke is within the rectangle bounds
     function strokeInBounds(lat,lng){
         var ne = rectangle.getBounds().getNorthEast();
         var sw = rectangle.getBounds().getSouthWest();
         return lat >= sw.lat() && lat <= ne.lat() && lng >= sw.lng() && lng <= ne.lng()  
     }
     
-    function timeSize(current, stroke) {
-        
-        size = startMag + ((stroke - current) / decayTime)
-        
-        if(size > startMag){
-            size = 0;
-        } else if (size < 0){
-            size = -1;
-        };
-            
-        return size
-    }
+
     
+    /*
+    This starts the function that updates the markers and is called at delay frequency
+    */
 
     // Function to set and update markers, called through AJAX
 	function setMarkers(locObj) {
-        
-        // Some slider, box, or function to override this currentTime variable
-                
+
+        // Get current time
         var realTime = (new Date()).getTime()/1000;
         
+        // Offset time by data offset
         var currentTime = realTime - timeOffset;
                 
+        // Set states, delays, and run status from time control buttons
         if (pauseSet){
             pauseTime = currentTime - pauseDelay
             runPause = true
@@ -645,6 +652,7 @@ $(function(){
             runBackward = false
         };
 
+        // Update currentTime by pauseDelay from time control
         currentTime = currentTime - pauseDelay        
         
         // Set terminator time
