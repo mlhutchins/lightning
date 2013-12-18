@@ -664,6 +664,20 @@ $(function(){
         currentStrokes = 0; 
         currentBoxStrokes = 0;
         
+        // Display total strokes held in memory
+        var strokeMemory = document.getElementById('memory');
+        var strokeCount = Object.keys(locations).length
+
+        strokeMemory.innerHTML = strokeCount + ' strokes held in memory.';
+        
+        // Display earliest time in info div
+        var firstInfo = document.getElementById('firstTime');
+        var firstUTC = new Date(firstTime*1000);
+        if (firstTime !== 1e12){
+            firstInfo.innerHTML = 'Earliest Time Available: ' + firstUTC;
+        };
+        
+        
         // Remove strokes if clear button pressed, and reset pause timing
 		if(auto_remove) {
 			//Remove markers for all unreported locs, and the corrsponding locations entry.
@@ -827,13 +841,15 @@ $(function(){
   <body bgcolor=black link="#CC33CC" vlink="#CC33CC" alink="#ff0000">
       <div id="map-canvas" style="width:100%; height:90%;"></div>
       <center>
+          <div style='color:white' id="time"></div>
+          <div style='color:white' id="stats"></div> 
+          <div style='color:white' id="memory"></div> 
+          <div style='color:white' id="firstTime"></div>
           <div style='color:white'>
               <p>
               <a href="">Demo Map</a> <a href="">Real-Time Map</a>
               </p>    
           </div>
-          <div style='color:white' id="time"></div>
-          <div style='color:white' id="stats"></div> 
       </center>
   </body>
 </html>
