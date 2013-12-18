@@ -31,8 +31,13 @@ $(function(){
     var getDelay = 1 // interval between server fetches (ms)
     var lastGet = 0; // holds time of last server fetch
 	var locations = {};//A repository for markers (and the data from which they were contructed).
-                
+    var runPause = false; // start off with map playing; default to no state change
+    var runPlay = false; // start off playing; default to no state change
+    var runReal = false; // default to no state change
+    var pauseDelay = 0; // start with no pause offset
 	var auto_remove = false;//When true, markers for all unreported locs will be removed.
+    var realTime = 0;
+    var realTimeStep = 0;
     
 	var map = new google.maps.Map(document.getElementById('map-canvas'), {
 		zoom: 3,
@@ -251,9 +256,22 @@ $(function(){
         
         // Some slider, box, or function to override this currentTime variable
         
-        var realTime = (new Date()).getTime()/1000;
+        realTimeStep = (new Date()).getTime()/1000 - realTime;
         
-        var currentTime = realTime - timeOffset;
+        realTime = (new Date()).getTime()/1000;
+        
+        if (runReal){
+            pauseDelay = 0
+            runReal = false
+            runPlay = false
+        } else if (runPause){
+            pauseDelay = realTime
+            runPause = false
+        } else if (runPlay){
+            pauseDelay = pauseDelay + realTimeStep
+        }
+        
+        var currentTime = realTime - timeOffset - pauseDelay;
         
         // Set terminator time
         var currentUTC = new Date(currentTime*1000);
