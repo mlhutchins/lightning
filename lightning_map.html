@@ -402,23 +402,33 @@ $(function(){
 	function setMarkers(locObj) {
         
         // Some slider, box, or function to override this currentTime variable
-        
-        realTimeStep = (new Date()).getTime()/1000 - realTime;
-        
+                
         realTime = (new Date()).getTime()/1000;
         
+        var currentTime = realTime - timeOffset;
+        
+        if (pauseSet){
+            pauseTime = currentTime
+            runPause = true
+            runReal = false
+            pauseSet = false
+        }
         if (runReal){
             pauseDelay = 0
-            runReal = false
             runPlay = false
-        } else if (runPause){
-            pauseDelay = realTime
             runPause = false
-        } else if (runPlay){
-            pauseDelay = pauseDelay + realTimeStep
         }
+        if (runPlay){
+            runReal = false
+            runPause = false
+        }
+        if (runPause){
+            pauseDelay = currentTime - pauseTime
+            runPlay = false
+            runReal = false
+        } 
         
-        var currentTime = realTime - timeOffset - pauseDelay;
+        currentTime = currentTime - pauseDelay
         
         // Set terminator time
         var currentUTC = new Date(currentTime*1000);
