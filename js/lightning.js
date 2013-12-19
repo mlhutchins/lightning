@@ -20,7 +20,8 @@ $(function(){
     var pauseSet = false; // flag to pause playback
     var pauseTime = 0; // Initial pause values
     var firstTime = 1e12; // Initial first stroke time
-    var lastTime = -1e12; // initial last stroke time
+    var lastTime = -1e12; // initial last stroke timed
+    var speedFactor = 1; // Initial speed factor of 1
     var auto_remove = false;//When true, markers for all unreported locs will be removed.
     var showBox = false; // Start with no subset box shown
     
@@ -635,7 +636,7 @@ $(function(){
 
         // Get current time
         var realTime = (new Date()).getTime()/1000;
-        
+
         // Offset time by data offset
         var currentTime = realTime - timeOffset;
         
@@ -701,6 +702,9 @@ $(function(){
             timeOffset = timeOffsetMin;
         };
 
+        // Increase playback speed by speedFactor
+        timeOffset = timeOffset -  ajaxObj.delay * (speedFactor  - 1) / 1000;
+        
         // Offset time by new time offset
         currentTime = realTime - timeOffset;
                 
