@@ -29,8 +29,8 @@ $(function(){
 
     // Internal map settings
     var startMag = 6 // Initial marker size
-    var decayTime = 2 // Decay of marker (in ms)
-    var timeOffset = 240;//(new Date()).getTime()/1000 - 1371340800.18; //account for offset with test file.
+    var decayTime = 0.5 // Decay of marker (size / second)
+    var markerLifetime = (startMag - 1) / decayTime // Marker lifetime, markers are removed at size = 1
     var getDelay = 1 // interval between server fetches (s)
     
     // Initial tates and values for the buttons
@@ -206,11 +206,11 @@ $(function(){
     // Function to find the stroke size based on the time difference
     function timeSize(current, stroke) {
         
-        size = startMag + ((stroke - current) / decayTime)
+        size = startMag + ((stroke - current) * decayTime)
         
         if(size > startMag){
             size = 0;
-        } else if (size < 0){
+        } else if (size <= 1){
             size = -1;
         };
             
@@ -718,9 +718,9 @@ $(function(){
         // Display total number of strokes
         var info = document.getElementById('stats');
         if (showBox){
-            info.innerHTML = 'Global strokes shown: ' + currentStrokes + ', Strokes in selection: ' + currentBoxStrokes;
+            info.innerHTML = 'Global stroke rate: ' + currentStrokes / markerLifetime + ' (strokes/second), Strokes rate in selection: ' + currentBoxStrokes / markerLifetime + ' (strokes/second)';
         } else {
-            info.innerHTML = 'Global strokes shown: ' + currentStrokes;
+            info.innerHTML = 'Global stroke rate: ' + currentStrokes / markerLifetime + ' (strokes/second)';
         };
         
         currentStrokes = 0; 
