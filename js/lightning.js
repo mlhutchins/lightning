@@ -700,33 +700,39 @@ $(function(){
         dno.setDate(currentUTC);
  
         // Display time in info div
-        var info = document.getElementById('time');
-        info.innerHTML = 'Current Time Shown: ' + currentUTC;
-     
-        // Display total number of strokes
-        var info = document.getElementById('stats');
-        if (showBox){
-            info.innerHTML = 'Global stroke rate: ' + currentStrokes / markerLifetime + ' (strokes/second), Strokes rate in selection: ' + currentBoxStrokes / markerLifetime + ' (strokes/second)';
-        } else {
-            info.innerHTML = 'Global stroke rate: ' + currentStrokes / markerLifetime + ' (strokes/second)';
+        if (document.getElementById('time')){
+            var info = document.getElementById('time');
+            info.innerHTML = 'Current Time Shown: ' + currentUTC;
         };
+        
+        // Display total number of strokes
+        if (document.getElementById('stats')){
+            var info = document.getElementById('stats');
+            if (showBox){
+                info.innerHTML = 'Global stroke rate: ' + currentStrokes / markerLifetime + ' (strokes/second), Strokes rate in selection: ' + currentBoxStrokes / markerLifetime + ' (strokes/second)';
+            } else {
+                info.innerHTML = 'Global stroke rate: ' + currentStrokes / markerLifetime + ' (strokes/second)';
+            };
+        }
         
         currentStrokes = 0; 
         currentBoxStrokes = 0;
         
         // Display total strokes held in memory
-        var strokeMemory = document.getElementById('memory');
-        var strokeCount = Object.keys(locations).length
-
-        strokeMemory.innerHTML = strokeCount + ' strokes held in memory.';
-        
-        // Display earliest time in info div
-        var firstInfo = document.getElementById('firstTime');
-        var firstUTC = new Date(firstTime*1000);
-        if (firstTime !== 1e12){
-            firstInfo.innerHTML = 'Earliest Time Available: ' + firstUTC;
+        if (document.getElementById('memory')){
+            var strokeMemory = document.getElementById('memory');
+            var strokeCount = Object.keys(locations).length
+            strokeMemory.innerHTML = strokeCount + ' strokes held in memory.';
         };
         
+        // Display earliest time in info div
+        if (document.getElementById('firstTime')){
+            var firstInfo = document.getElementById('firstTime');
+            var firstUTC = new Date(firstTime*1000);
+            if (firstTime !== 1e12){
+                firstInfo.innerHTML = 'Earliest Time Available: ' + firstUTC;
+            };
+        };
         
         // Remove strokes if clear button pressed, and reset pause timing
 		if(auto_remove) {
