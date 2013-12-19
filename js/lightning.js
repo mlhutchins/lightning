@@ -495,6 +495,8 @@ $(function(){
         // Set the control's real to the current Map center.
         google.maps.event.addDomListener(setRealUI, 'click', function() {
             runReal = true;
+            showAll = false;
+            removeMarkers = true;
         });
     };
     
@@ -917,6 +919,8 @@ $(function(){
                     if (showAll){
                         
                         loc.mag = (startMag - endMag)/2 + endMag;
+                        currentStrokes = null;
+                        currentBoxStrokes = null;
                     };
                     
                     // If there is a marker, update marker size
