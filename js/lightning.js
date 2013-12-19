@@ -8,22 +8,22 @@ $(function(){
     var decayTime = 0.5; // Decay of marker (size / second)
     var markerLifetime = (startMag - 1) / decayTime; // Marker lifetime, markers are removed at size = 1
     var timeOffset = 240; // Delay between JSON data and current time
+    var timeOffsetMin = timeOffset; // Minimum offset from real time
     var getDelay = 1; // interval between server fetches (s)
 
-    // Initial tates and values for the buttons
-    var runPause = false; // start off with map playing; default to no state change
-    var runPlay = false; // start off playing; default to no state change
-    var runReal = false; // default to no state change
-    var runBackward = false;
-    var runForward = false;
-    var pauseSet = false;
-    var pauseDelay = 0; // start with no pause offset
-    var pauseTime = 0;
-    var firstTime = 1e12;
-    var lastTime = -1e12;
-    var archiveOffset = 0;
+    // Initial states and values for the buttons
+    var runPause = false; // flag to pause playback
+    var runPlay = false; // flag to resume playback
+    var runReal = false; // flag to run in realtime, or reset to realtime
+    var runBackward = false; // flag to move back 30 seconds
+    var runForward = false; // flag to move forward 30 seconds
+    var pauseSet = false; // flag to pause playback
+    var pauseTime = 0; // Initial pause values
+    var firstTime = 1e12; // Initial first stroke time
+    var lastTime = -1e12; // initial last stroke time
     var auto_remove = false;//When true, markers for all unreported locs will be removed.
     var showBox = false; // Start with no subset box shown
+    
     // Internal storage
     var currentStrokes = 0; // Index of total strokes displayed
     var currentBoxStrokes = 0; // Index of strokes in box
@@ -638,18 +638,17 @@ $(function(){
         
         // Offset time by data offset
         var currentTime = realTime - timeOffset;
-                
+        
         // Set states, delays, and run status from time control buttons
         if (pauseSet){
-            pauseTime = currentTime - pauseDelay;
+            pauseTime = realTime - timeOffset;
             runPause = true;
             runReal = false;
             runPlay = false;
             pauseSet = false;
         };
         if (runReal){
-            pauseDelay = 0;
-            archiveOffset = 0;
+            timeOffset = timeOffsetMin;
             runPlay = false;
             runPause = false;
         }
@@ -658,25 +657,25 @@ $(function(){
             runPause = false;
         }
         if (runPause){
-            pauseDelay = currentTime - pauseTime;
+            timeOffset = realTime - pauseTime;
             runPlay = false;
             runReal = false;
         } 
         if (runForward){
-            pauseDelay = pauseDelay - 30;
+            timeOffset = timeOffset - 30;
             pauseTime = pauseTime + 30;
-            if (pauseDelay < 0){
-                pauseDelay = 0;
+            if ((realTime - timeOffset) > lastTime && lastTime!==-1e12){
+                timeOffset = realTime - lastTime;
             };
-            if (pauseTime > currentTime){
-                pauseTime = currentTime;
+            if (pauseTime > lastTime && lastTime !== -1e12){
+                pauseTime = lastTime;
             };
             runForward = false;
         } else if (runBackward){
-            pauseDelay = pauseDelay + 30;
+            timeOffset = timeOffset + 30;
             pauseTime = pauseTime - 30;
-            if ((currentTime - pauseDelay) < firstTime && firstTime!==1e12){
-                pauseDelay = currentTime - firstTime;
+            if ((realTime - timeOffset) < firstTime && firstTime!==1e12){
+                timeOffset = realTime - firstTime;
             };
             if (pauseTime < firstTime && firstTime !== 1e12){
                 pauseTime = firstTime;
@@ -686,16 +685,25 @@ $(function(){
         
 
         // Restart file if currentTime passes the last stroke by 2 minutes
-        if ((currentTime - archiveOffset ) > (lastTime + 120) && lastTime!==-1e12){
-            archiveOffset = currentTime - firstTime;
-            pauseDelay = 0;
+        if ((realTime - timeOffset) > (lastTime + 120) && lastTime!==-1e12){
+            timeOffset = realTime - firstTime;
             runReal = false;
-        }
-
-        // Update currentTime by pauseDelay from time control
-        currentTime = currentTime - pauseDelay - archiveOffset      
-
+        };
         
+        // Pause at end of file
+        if ((realTime - timeOffset) > (lastTime) && lastTime!==-1e12 && !runPause){
+            pauseSet = true;
+            timeOffset = timeOffset + 1;
+        };
+  
+        // Force timeOffset to stay below timeOffsetMin
+        if (timeOffset < timeOffsetMin){
+            timeOffset = timeOffsetMin;
+        };
+
+        // Offset time by new time offset
+        currentTime = realTime - timeOffset;
+                
         // Set terminator time
         var currentUTC = new Date(currentTime*1000);
         dno.setDate(currentUTC);
