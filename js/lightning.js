@@ -25,7 +25,8 @@ $(function(){
     var speedFactor = 1; // Initial speed factor of 1
     var auto_remove = false;//When true, markers for all unreported locs will be removed.
     var showBox = false; // Start with no subset box shown
-    
+    var showAll = false; // Don't show all loaded strokes on launch
+    var removeMarkers = false; // Set removal of all markers to false
     // Internal storage
     var currentStrokes = 0; // Index of total strokes displayed
     var currentBoxStrokes = 0; // Index of strokes in box
@@ -255,6 +256,61 @@ $(function(){
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(cloudControlDiv);
 
     
+    
+        
+    // Show All Strokes Button
+    // Define a property to hold the Show state
+    ShowData.prototype.show_ = null;
+    
+    ShowData.prototype.setShow = function(show) {
+        this.show_ = show;
+    }
+        
+    function ShowData(controlDiv, map) {
+        
+        // Set CSS styles for the DIV containing the control
+        // Setting padding to 5 px will offset the control
+        // from the edge of the map
+        controlDiv.style.padding = '5px';
+        
+        // Set CSS for the setShow control border
+        var setShowUI = document.createElement('div');
+        setShowUI.style.backgroundColor = 'white';
+        setShowUI.style.borderStyle = 'solid';
+        setShowUI.style.borderWidth = '1px';
+        setShowUI.style.cursor = 'pointer';
+        setShowUI.style.textAlign = 'center';
+        setShowUI.title = 'Click to show all strokes. Caution: may slow system.';
+        controlDiv.appendChild(setShowUI);
+        
+        // Set CSS for the control interior
+        var setShowText = document.createElement('div');
+        setShowText.style.fontFamily = 'Arial,sans-serif';
+        setShowText.style.fontSize = '12px';
+        setShowText.style.paddingLeft = '4px';
+        setShowText.style.paddingRight = '4px';
+        setShowText.innerHTML = '<b>Show All Strokes (Slow)</b>';
+        setShowUI.appendChild(setShowText);
+        
+        // Setup the click event listener for Set Show:
+        // Set the control's show to the current Map center.
+        google.maps.event.addDomListener(setShowUI, 'click', function() {
+            
+            if (showAll){
+                showAll = false;
+                removeMarkers = true;
+            } else {
+                showAll = true;
+            };
+        });
+    };
+    
+    var showControlDiv = document.createElement('div');
+    var showControl = new ShowData(showControlDiv, map);
+    
+    showControlDiv.index = 2;
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(showControlDiv);
+
     
     
     // Data flush button
@@ -545,8 +601,6 @@ $(function(){
     
     
     // Subset Box Activation Button
-    
-        // Data flush button
     // Define a property to hold the Show state
     ShowBox.prototype.show_ = null;
     
@@ -763,6 +817,17 @@ $(function(){
             firstTime = 1e12;
 		}
 
+        // Remove markers if removeMarkers triggered
+		if(removeMarkers) {
+			//Remove markers for all unreported locs, and the corrsponding locations entry.
+			$.each(locations, function(key) {
+                if(locations[key].marker) {
+                    locations[key].marker.setMap(null);
+                }
+			});
+            removeMarkers = false;
+		}
+        
         // Only get new data if it has been at least getDelay since the last fetch
         if (realTime > (lastGet + getDelay)){
             $.each(locObj, function(key, loc) {
@@ -848,6 +913,11 @@ $(function(){
                     
                     // Update stroke size
                     loc.mag = timeSize(currentTime, loc.unixTime);
+                    
+                    if (showAll){
+                        
+                        loc.mag = (startMag - endMag)/2 + endMag;
+                    };
                     
                     // If there is a marker, update marker size
                     if (locations[key].marker!==undefined){
