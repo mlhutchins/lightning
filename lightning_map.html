@@ -12,7 +12,7 @@
     </style>
     
     <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC20mYB0qVgC_Ic3vpry-v6rRNp0zLfkIo&sensor=false">
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC20mYB0qVgC_Ic3vpry-v6rRNp0zLfkIo&sensor=false&libraries=weather">
     </script>  
       
     <script type="text/javascript"
@@ -49,6 +49,10 @@ $(function(){
     var currentStrokes = 0 // Index of total strokes displayed
     var currentBoxStrokes = 0 // Index of strokes in box
     var lastGet = 0; // holds time of last server fetch
+    
+    // Cloud layer settings
+    var cloudLayer = new google.maps.weather.CloudLayer();
+    var showCloud = true; 
     
 	var map = new google.maps.Map(document.getElementById('map-canvas'), {
 		zoom: 3,
@@ -212,6 +216,64 @@ $(function(){
             
         return size
     }
+    
+    
+    
+    // Clould Layer Display
+    // Define a property to hold the Cloud state
+    CloudData.prototype.cloud_ = null;
+    
+    CloudData.prototype.setCloud = function(cloud) {
+        this.cloud_ = cloud;
+    }
+        
+    function CloudData(controlDiv, map) {
+        
+        // Set CSS styles for the DIV containing the control
+        // Setting padding to 5 px will offset the control
+        // from the edge of the map
+        controlDiv.style.padding = '5px';
+        
+        // Set CSS for the setCloud control border
+        var setCloudUI = document.createElement('div');
+        setCloudUI.style.backgroundColor = 'white';
+        setCloudUI.style.borderStyle = 'solid';
+        setCloudUI.style.borderWidth = '1px';
+        setCloudUI.style.cursor = 'pointer';
+        setCloudUI.style.textAlign = 'center';
+        setCloudUI.title = 'Click to show cloud overlay.';
+        controlDiv.appendChild(setCloudUI);
+        
+        // Set CSS for the control interior
+        var setCloudText = document.createElement('div');
+        setCloudText.style.fontFamily = 'Arial,sans-serif';
+        setCloudText.style.fontSize = '12px';
+        setCloudText.style.paddingLeft = '4px';
+        setCloudText.style.paddingRight = '4px';
+        setCloudText.innerHTML = '<b>Cloud Overlay</b>';
+        setCloudUI.appendChild(setCloudText);
+        
+        // Setup the click event listener for Set Cloud:
+        // Set the control's cloud to the current Map center.
+        google.maps.event.addDomListener(setCloudUI, 'click', function() {
+            
+            if (showCloud){
+                cloudLayer.setMap(map)
+                showCloud = false
+            } else {
+                cloudLayer.setMap(null)
+                showCloud = true
+            };
+        });
+    }
+    
+    var cloudControlDiv = document.createElement('div');
+    var cloudControl = new CloudData(cloudControlDiv, map);
+    
+    cloudControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(cloudControlDiv);
+
+    
     
     
     // Data flush button
