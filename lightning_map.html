@@ -31,8 +31,9 @@ $(function(){
     var startMag = 6 // Initial marker size
     var decayTime = 0.5 // Decay of marker (size / second)
     var markerLifetime = (startMag - 1) / decayTime // Marker lifetime, markers are removed at size = 1
+    var timeOffset = 240;// Delay between JSON data and current time
     var getDelay = 1 // interval between server fetches (s)
-    
+
     // Initial tates and values for the buttons
     var runPause = false; // start off with map playing; default to no state change
     var runPlay = false; // start off playing; default to no state change
@@ -43,6 +44,8 @@ $(function(){
     var pauseDelay = 0; // start with no pause offset
     var pauseTime = 0;
     var firstTime = 1e12;
+    var lastTime = -1e12;
+    var archiveOffset = 0;
     var auto_remove = false;//When true, markers for all unreported locs will be removed.
     var showBox = false; // Start with no subset box shown
     // Internal storage
@@ -670,6 +673,7 @@ $(function(){
         }
         if (runReal){
             pauseDelay = 0
+            archiveOffset = 0
             runPlay = false
             runPause = false
         }
@@ -703,9 +707,17 @@ $(function(){
             }
             runBackward = false
         };
+        
+
+        // Restart file if currentTime passes the last stroke by 2 minutes
+        if ((currentTime - archiveOffset ) > (lastTime + 120) && lastTime!==-1e12){
+            archiveOffset = currentTime - firstTime
+            pauseDelay = 0
+        }
 
         // Update currentTime by pauseDelay from time control
-        currentTime = currentTime - pauseDelay        
+        currentTime = currentTime - pauseDelay - archiveOffset      
+
         
         // Set terminator time
         var currentUTC = new Date(currentTime*1000);
@@ -772,6 +784,12 @@ $(function(){
                     // Set firstTime to the earliest time in the record
                     if (loc.unixTime < firstTime) {
                         firstTime = loc.unixTime
+                    };
+                    
+                    
+                    // Set lastTime to the lastest time in the record
+                    if (loc.unixTime > lastTime) {
+                        lastTime = loc.unixTime
                     };
                     
     //				//Attach click listener to marker
