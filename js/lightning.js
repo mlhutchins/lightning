@@ -4,11 +4,11 @@ $(function(){
     var locations = {};//A repository for markers (and the data from which they were contructed).
 
     // Internal map settings
-    var startMag = 6 // Initial marker size
-    var decayTime = 0.5 // Decay of marker (size / second)
-    var markerLifetime = (startMag - 1) / decayTime // Marker lifetime, markers are removed at size = 1
-    var timeOffset = 240;// Delay between JSON data and current time
-    var getDelay = 1 // interval between server fetches (s)
+    var startMag = 6; // Initial marker size
+    var decayTime = 0.5; // Decay of marker (size / second)
+    var markerLifetime = (startMag - 1) / decayTime; // Marker lifetime, markers are removed at size = 1
+    var timeOffset = 240; // Delay between JSON data and current time
+    var getDelay = 1; // interval between server fetches (s)
 
     // Initial tates and values for the buttons
     var runPause = false; // start off with map playing; default to no state change
@@ -25,8 +25,8 @@ $(function(){
     var auto_remove = false;//When true, markers for all unreported locs will be removed.
     var showBox = false; // Start with no subset box shown
     // Internal storage
-    var currentStrokes = 0 // Index of total strokes displayed
-    var currentBoxStrokes = 0 // Index of strokes in box
+    var currentStrokes = 0; // Index of total strokes displayed
+    var currentBoxStrokes = 0; // Index of strokes in box
     var lastGet = 0; // holds time of last server fetch
     
     // Cloud layer settings
@@ -39,14 +39,14 @@ $(function(){
 		minZoom: 2,
 		streetViewControl: false,
 		center: new google.maps.LatLng(40, 0),
-		mapTypeId: google.maps.MapTypeId.SATELLITE
+		mapTypeId: google.maps.MapTypeId.SATELLITE;
 	});
 	var infowindow = new google.maps.InfoWindow();
     
     window.dno = new DayNightOverlay({
                     map: map,
                     fillColor: 'rgba(0,0,0,0.3)',
-                    date: new Date(Date.UTC(2011,0,1))
+                    date: new Date(Date.UTC(2011,0,1));
                 });
 
     window.dateField = document.getElementById('date');
@@ -139,7 +139,7 @@ $(function(){
                 'dataType': "json",
                 'success': function (data) {
                     json = data;
-                }
+                };
             });
             return json;
         })();
@@ -156,9 +156,9 @@ $(function(){
             title: stations[key].name,
             icon: {
               path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-              scale: 2
-            }
-        }
+              scale: 2;
+            };
+        };
         var marker = new google.maps.Marker(myMarkerOptions)
 
           google.maps.event.addListener(marker, 'click', (function(marker, key) {
@@ -167,7 +167,7 @@ $(function(){
               infowindow.open(map, marker);
             }
           })(marker, key));
-    }
+    };
     
     // Stroke marker style
     function getCircle(magnitude) {
@@ -177,15 +177,15 @@ $(function(){
             fillOpacity: .2,
             scale: Math.pow(2, magnitude) / Math.PI,
             strokeColor: 'white',
-            strokeWeight: .5
+            strokeWeight: .5;
         };
-    }
+    };
     
     
     // Function to find the stroke size based on the time difference
     function timeSize(current, stroke) {
         
-        size = startMag + ((stroke - current) * decayTime)
+        size = startMag + ((stroke - current) * decayTime);
         
         if(size > startMag){
             size = 0;
@@ -193,7 +193,7 @@ $(function(){
             size = -1;
         };
             
-        return size
+        return size;
     }
     
     
@@ -237,14 +237,14 @@ $(function(){
         google.maps.event.addDomListener(setCloudUI, 'click', function() {
             
             if (showCloud){
-                cloudLayer.setMap(map)
-                showCloud = false
+                cloudLayer.setMap(map);
+                showCloud = false;
             } else {
-                cloudLayer.setMap(null)
-                showCloud = true
+                cloudLayer.setMap(null);
+                showCloud = true;
             };
         });
-    }
+    };
     
     var cloudControlDiv = document.createElement('div');
     var cloudControl = new CloudData(cloudControlDiv, map);
@@ -292,9 +292,9 @@ $(function(){
         // Setup the click event listener for Set Clear:
         // Set the control's clear to the current Map center.
         google.maps.event.addDomListener(setClearUI, 'click', function() {
-            auto_remove = true
+            auto_remove = true;
         });
-    }
+    };
     
     var clearControlDiv = document.createElement('div');
     var clearControl = new ClearData(clearControlDiv, map);
@@ -342,9 +342,9 @@ $(function(){
         // Setup the click event listener for Set Play:
         // Set the control's play to the current Map center.
         google.maps.event.addDomListener(setPlayUI, 'click', function() {
-            runPlay = true
+            runPlay = true;
         });
-    }
+    };
     
     var playControlDiv = document.createElement('div');
     var playControl = new PlayData(playControlDiv, map);
@@ -389,9 +389,9 @@ $(function(){
         // Setup the click event listener for Set Pause:
         // Set the control's pause to the current Map center.
         google.maps.event.addDomListener(setPauseUI, 'click', function() {
-            pauseSet = true
+            pauseSet = true;
         });
-    }
+    };
     
     var pauseControlDiv = document.createElement('div');
     var pauseControl = new PauseData(pauseControlDiv, map);
@@ -436,9 +436,9 @@ $(function(){
         // Setup the click event listener for Set Real:
         // Set the control's real to the current Map center.
         google.maps.event.addDomListener(setRealUI, 'click', function() {
-            runReal = true
+            runReal = true;
         });
-    }
+    };
     
     var realControlDiv = document.createElement('div');
     var realControl = new RealData(realControlDiv, map);
@@ -452,7 +452,7 @@ $(function(){
     
     ForwardData.prototype.setForward = function(clear) {
         this.clear_ = clear;
-    }
+    };
         
     function ForwardData(controlDiv, map) {
         
@@ -483,9 +483,9 @@ $(function(){
         // Setup the click event listener for Set Forward:
         // Set the control's forward to the current Map center.
         google.maps.event.addDomListener(setForwardUI, 'click', function() {
-            runForward = true
+            runForward = true;
         });
-    }
+    };
     
     var forwardControlDiv = document.createElement('div');
     var forwardControl = new ForwardData(forwardControlDiv, map);
@@ -500,7 +500,7 @@ $(function(){
     
     BackwardData.prototype.setBackward = function(clear) {
         this.clear_ = clear;
-    }
+    };
         
     function BackwardData(controlDiv, map) {
         
@@ -531,7 +531,7 @@ $(function(){
         // Setup the click event listener for Set Backward:
         // Set the control's backward to the current Map center.
         google.maps.event.addDomListener(setBackwardUI, 'click', function() {
-            runBackward = true
+            runBackward = true;
         });
     }
     
@@ -582,16 +582,16 @@ $(function(){
         // Set the control's show to the current Map center.
         google.maps.event.addDomListener(setShowUI, 'click', function() {
             if (showBox){
-                showBox = false
+                showBox = false;
                 rectangle.setMap(null);   
 
             } else {
-                showBox = true
+                showBox = true;
                 rectangle.setMap(map);
 
             };
         });
-    }
+    };
     
     var showControlDiv = document.createElement('div');
     var showControl = new ShowBox(showControlDiv, map);
@@ -604,7 +604,7 @@ $(function(){
     // Draw and set the rectangle 
     var bounds = new google.maps.LatLngBounds(
         new google.maps.LatLng(-10, -110),
-        new google.maps.LatLng(25, -60)
+        new google.maps.LatLng(25, -60);
     );
     
     // Define the rectangle and set its editable property to true.
@@ -613,7 +613,7 @@ $(function(){
         editable: true,
         draggable: true,
         fillOpacity: .1,
-        strokeColor: '#FFFFFF'
+        strokeColor: '#FFFFFF';
     });
 
     
@@ -621,8 +621,8 @@ $(function(){
     function strokeInBounds(lat,lng){
         var ne = rectangle.getBounds().getNorthEast();
         var sw = rectangle.getBounds().getSouthWest();
-        return lat >= sw.lat() && lat <= ne.lat() && lng >= sw.lng() && lng <= ne.lng()  
-    }
+        return lat >= sw.lat() && lat <= ne.lat() && lng >= sw.lng() && lng <= ne.lng();
+    };
     
 
     
@@ -641,47 +641,47 @@ $(function(){
                 
         // Set states, delays, and run status from time control buttons
         if (pauseSet){
-            pauseTime = currentTime - pauseDelay
-            runPause = true
-            runReal = false
-            runPlay = false
-            pauseSet = false
-        }
+            pauseTime = currentTime - pauseDelay;
+            runPause = true;
+            runReal = false;
+            runPlay = false;
+            pauseSet = false;
+        };
         if (runReal){
-            pauseDelay = 0
-            archiveOffset = 0
-            runPlay = false
-            runPause = false
+            pauseDelay = 0;
+            archiveOffset = 0;
+            runPlay = false;
+            runPause = false;
         }
         if (runPlay){
-            runReal = false
-            runPause = false
+            runReal = false;
+            runPause = false;
         }
         if (runPause){
-            pauseDelay = currentTime - pauseTime
-            runPlay = false
-            runReal = false
+            pauseDelay = currentTime - pauseTime;
+            runPlay = false;
+            runReal = false;
         } 
         if (runForward){
-            pauseDelay = pauseDelay - 30
-            pauseTime = pauseTime + 30
+            pauseDelay = pauseDelay - 30;
+            pauseTime = pauseTime + 30;
             if (pauseDelay < 0){
-                pauseDelay = 0
+                pauseDelay = 0;
             };
             if (pauseTime > currentTime){
-                pauseTime = currentTime
+                pauseTime = currentTime;
             };
-            runForward = false
+            runForward = false;
         } else if (runBackward){
-            pauseDelay = pauseDelay + 30
-            pauseTime = pauseTime - 30
+            pauseDelay = pauseDelay + 30;
+            pauseTime = pauseTime - 30;
             if ((currentTime - pauseDelay) < firstTime && firstTime!==1e12){
-                pauseDelay = currentTime - firstTime
+                pauseDelay = currentTime - firstTime;
             };
             if (pauseTime < firstTime && firstTime !== 1e12){
-                pauseTime = firstTime
-            }
-            runBackward = false
+                pauseTime = firstTime;
+            };
+            runBackward = false;
         };
         
 
