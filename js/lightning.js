@@ -5,8 +5,9 @@ $(function(){
 
     // Internal map settings
     var startMag = 6; // Initial marker size
+    var endMag = 2; // Final marker size
     var decayTime = 0.5; // Decay of marker (size / second)
-    var markerLifetime = (startMag - 1) / decayTime; // Marker lifetime, markers are removed at size = 1
+    var markerLifetime = (startMag - endMag) / decayTime; // Marker lifetime
     var timeOffset = 240; // Delay between JSON data and current time
     var timeOffsetMin = timeOffset; // Minimum offset from real time
     var getDelay = 1; // interval between server fetches (s)
@@ -190,7 +191,7 @@ $(function(){
         
         if(size > startMag){
             size = 0;
-        } else if (size <= 1){
+        } else if (size <= endMag){
             size = -1;
         };
             
