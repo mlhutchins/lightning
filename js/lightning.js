@@ -39,14 +39,14 @@ $(function(){
 		minZoom: 2,
 		streetViewControl: false,
 		center: new google.maps.LatLng(40, 0),
-		mapTypeId: google.maps.MapTypeId.SATELLITE;
+		mapTypeId: google.maps.MapTypeId.SATELLITE
 	});
 	var infowindow = new google.maps.InfoWindow();
     
     window.dno = new DayNightOverlay({
                     map: map,
                     fillColor: 'rgba(0,0,0,0.3)',
-                    date: new Date(Date.UTC(2011,0,1));
+                    date: new Date(Date.UTC(2011,0,1))
                 });
 
     window.dateField = document.getElementById('date');
@@ -139,7 +139,7 @@ $(function(){
                 'dataType': "json",
                 'success': function (data) {
                     json = data;
-                };
+                }
             });
             return json;
         })();
@@ -156,8 +156,8 @@ $(function(){
             title: stations[key].name,
             icon: {
               path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-              scale: 2;
-            };
+              scale: 2
+            }
         };
         var marker = new google.maps.Marker(myMarkerOptions)
 
@@ -177,7 +177,7 @@ $(function(){
             fillOpacity: .2,
             scale: Math.pow(2, magnitude) / Math.PI,
             strokeColor: 'white',
-            strokeWeight: .5;
+            strokeWeight: .5
         };
     };
     
@@ -604,7 +604,7 @@ $(function(){
     // Draw and set the rectangle 
     var bounds = new google.maps.LatLngBounds(
         new google.maps.LatLng(-10, -110),
-        new google.maps.LatLng(25, -60);
+        new google.maps.LatLng(25, -60)
     );
     
     // Define the rectangle and set its editable property to true.
@@ -613,7 +613,7 @@ $(function(){
         editable: true,
         draggable: true,
         fillOpacity: .1,
-        strokeColor: '#FFFFFF';
+        strokeColor: '#FFFFFF'
     });
 
     
@@ -687,8 +687,9 @@ $(function(){
 
         // Restart file if currentTime passes the last stroke by 2 minutes
         if ((currentTime - archiveOffset ) > (lastTime + 120) && lastTime!==-1e12){
-            archiveOffset = currentTime - firstTime
-            pauseDelay = 0
+            archiveOffset = currentTime - firstTime;
+            pauseDelay = 0;
+            runReal = false;
         }
 
         // Update currentTime by pauseDelay from time control
