@@ -652,6 +652,7 @@ $(function(){
             timeOffset = timeOffsetMin;
             runPlay = false;
             runPause = false;
+            speedFactor = 1;
         }
         if (runPlay){
             runReal = false;
