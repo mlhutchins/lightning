@@ -27,11 +27,14 @@ $(function(){
     var showBox = false; // Start with no subset box shown
     var showAll = false; // Don't show all loaded strokes on launch
     var removeMarkers = false; // Set removal of all markers to false
+    var showHeat = false; // Start with no heatmap shown
+    
     // Internal storage
     var currentStrokes = 0; // Index of total strokes displayed
     var currentBoxStrokes = 0; // Index of strokes in box
     var lastGet = 0; // holds time of last server fetch
-    
+    var strokePoints = []; // Array to hold stroke data
+    var heatmap;
     // Cloud layer settings
     var cloudLayer = new google.maps.weather.CloudLayer();
     var showCloud = true; 
@@ -44,6 +47,7 @@ $(function(){
 		center: new google.maps.LatLng(40, 0),
 		mapTypeId: google.maps.MapTypeId.SATELLITE
 	});
+    
 	var infowindow = new google.maps.InfoWindow();
     
     window.dno = new DayNightOverlay({
@@ -297,11 +301,19 @@ $(function(){
         google.maps.event.addDomListener(setShowUI, 'click', function() {
             
             if (showAll){
+                heatmap.setMap(null);
                 showAll = false;
-                removeMarkers = true;
             } else {
+                        
+                var pointArray = new google.maps.MVCArray(strokePoints);
+                heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: pointArray
+                });
+ 
+                heatmap.setMap(map);
                 showAll = true;
             };
+
         });
     };
     
@@ -309,7 +321,7 @@ $(function(){
     var showControl = new ShowData(showControlDiv, map);
     
     showControlDiv.index = 2;
-    // map.controls[google.maps.ControlPosition.TOP_LEFT].push(showControlDiv);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(showControlDiv);
 
     
     
@@ -495,7 +507,6 @@ $(function(){
         // Set the control's real to the current Map center.
         google.maps.event.addDomListener(setRealUI, 'click', function() {
             runReal = true;
-            showAll = false;
             removeMarkers = true;
         });
     };
@@ -875,9 +886,14 @@ $(function(){
             lastGet = realTime
         };
         
+        strokePoints = [];
         
         $.each(locations, function(key, loc) {
        
+            
+            // Add strokes to strokePoint array
+            var stroke = new google.maps.LatLng(locations[key].lat,locations[key].long)
+            strokePoints.push(stroke)
             
             // Only create a marker for the current time window
             if(locations[key].marker == undefined && loc.mag > 0){
@@ -916,13 +932,6 @@ $(function(){
                     // Update stroke size
                     loc.mag = timeSize(currentTime, loc.unixTime);
                     
-                    if (showAll){
-                        
-                        loc.mag = (startMag - endMag)/2 + endMag;
-                        currentStrokes = null;
-                        currentBoxStrokes = null;
-                    };
-                    
                     // If there is a marker, update marker size
                     if (locations[key].marker!==undefined){
                         // Update markers
@@ -948,8 +957,7 @@ $(function(){
                         
             
 		});
-        
-        
+
 	}
 
 	var ajaxObj = {//Object to save cluttering the namespace.
