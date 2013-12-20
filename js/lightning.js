@@ -672,12 +672,6 @@ $(function(){
     
     
     
-
-    
-    
-    
-    
-    
     // Subset Box Activation Button
     // Define a property to hold the Show state
     ShowBox.prototype.show_ = null;
@@ -733,6 +727,63 @@ $(function(){
     showControlDiv.index = 1;
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push(showControlDiv);
 
+    
+    
+    
+    // Time Playback Speed Control
+    // Create a div to hold everything else
+    var controlDiv = document.createElement('DIV');
+    controlDiv.id = "controls";
+    controlDiv.style.backgroundColor = 'white';
+    controlDiv.style.borderStyle = 'solid';
+    controlDiv.style.borderWidth = '1px';
+    controlDiv.style.cursor = 'pointer';
+    controlDiv.style.textAlign = 'center';
+    controlDiv.style.padding = '1px';
+
+    // Set CSS for the control interior
+    var setShowText = document.createElement('b');
+    setShowText.style.fontFamily = 'Arial,sans-serif';
+    setShowText.style.fontSize = '12px';
+    setShowText.style.paddingLeft = '4px';
+    setShowText.style.paddingRight = '4px';
+    setShowText.innerHTML = 'Speed:';
+        
+    // Create an input field
+    var controlInput = document.createElement('input');
+    controlInput.id = "speed-control";
+    controlInput.name = "speed-control";
+    controlInput.value = "1";
+    controlInput.size = 3;
+   
+    // Create a button to send the information
+    var setButton = document.createElement('b');
+    setButton.style.fontFamily = 'Arial,sans-serif';
+    setButton.style.fontSize = '12px';
+    setButton.style.paddingLeft = '4px';
+    setButton.style.paddingRight = '4px';
+    setButton.style.cursor = 'pointer';
+    setButton.innerHTML = 'Set';
+
+    // Append everything to the wrapper div
+    controlDiv.appendChild(setShowText);
+    controlDiv.appendChild(controlInput);
+    controlDiv.appendChild(setButton);
+    
+    var onClick = function() {
+        
+        var speed = $("#speed-control").val();
+
+        if (isNumber(speed)){
+            speedFactor = speed;
+        };
+    };
+    google.maps.event.addDomListener(setButton, 'click', onClick);
+    controlDiv.index = 7
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(controlDiv);
+    
+    
+    
     
     // Create the selection box rectangle with listener for bounds change
     // Draw and set the rectangle 
