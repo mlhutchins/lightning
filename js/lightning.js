@@ -29,6 +29,7 @@ $(function(){
     var removeMarkers = false; // Set removal of all markers to false
     var gradient = ['rgba(254,229,217,0)','rgba(254,229,217,1)', 'rgba(252,187,161,1)', 'rgba(252,146,114,1)', 'rgba(251,106,74,1)', 'rgba(222,45,38,1)', 'rgba(165,15,21,1)']; // Set Color Gradient for density
     var getStrokePoints = false; // Start off not accumulating strokes into a heatmap
+    var runStart = false; // Return to start variable
     
     // Internal storage
     var currentStrokes = 0; // Index of total strokes displayed
@@ -614,6 +615,61 @@ $(function(){
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(backwardControlDiv);
     
     
+    // Set time to start
+    
+    StartData.prototype.start_ = null;
+    
+    StartData.prototype.setStart = function(start) {
+        this.start_ = start;
+    };
+        
+    function StartData(controlDiv, map) {
+        
+        // Set CSS styles for the DIV containing the control
+        // Setting padding to 5 px will offset the control
+        // from the edge of the map
+        controlDiv.style.padding = '5px';
+        
+        // Set CSS for the setStart control border
+        var setStartUI = document.createElement('div');
+        setStartUI.style.backgroundColor = 'white';
+        setStartUI.style.borderStyle = 'solid';
+        setStartUI.style.borderWidth = '1px';
+        setStartUI.style.cursor = 'pointer';
+        setStartUI.style.textAlign = 'center';
+        setStartUI.title = 'Click to go to start of loaded strokes.';
+        controlDiv.appendChild(setStartUI);
+        
+        // Set CSS for the control interior
+        var setStartText = document.createElement('div');
+        setStartText.style.fontFamily = 'Arial,sans-serif';
+        setStartText.style.fontSize = '12px';
+        setStartText.style.paddingLeft = '4px';
+        setStartText.style.paddingRight = '4px';
+        setStartText.innerHTML = '<b>Start</b>';
+        setStartUI.appendChild(setStartText);
+        
+        // Setup the click event listener for Set Start:
+        // Set the control's start to the current Map center.
+        google.maps.event.addDomListener(setStartUI, 'click', function() {
+            runStart = true
+        });
+    }
+    
+    var startControlDiv = document.createElement('div');
+    var startControl = new StartData(startControlDiv, map);
+    
+    startControlDiv.index = 0;
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(startControlDiv);
+    
+    
+    
+
+    
+    
+    
+    
+    
     // Subset Box Activation Button
     // Define a property to hold the Show state
     ShowBox.prototype.show_ = null;
@@ -772,6 +828,13 @@ $(function(){
             timeOffset = timeOffsetMin;
         };
 
+        // Return to the start of the file
+        if (runStart){
+            timeOffset = realTime - firstTime;
+            runReal = false;
+            runStart = false;
+        };
+        
         // Increase playback speed by speedFactor
         timeOffset = timeOffset -  ajaxObj.delay * (speedFactor  - 1) / 1000;
         
