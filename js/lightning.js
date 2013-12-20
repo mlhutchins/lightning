@@ -216,60 +216,76 @@ $(function(){
     
     
     
-    // Clould Layer Display
-    // Define a property to hold the Cloud state
-    CloudData.prototype.cloud_ = null;
     
-    CloudData.prototype.setCloud = function(cloud) {
-        this.cloud_ = cloud;
-    }
-        
-    function CloudData(controlDiv, map) {
-        
-        // Set CSS styles for the DIV containing the control
-        // Setting padding to 5 px will offset the control
-        // from the edge of the map
-        controlDiv.style.padding = '5px';
-        
-        // Set CSS for the setCloud control border
-        var setCloudUI = document.createElement('div');
-        setCloudUI.style.backgroundColor = 'white';
-        setCloudUI.style.borderStyle = 'solid';
-        setCloudUI.style.borderWidth = '1px';
-        setCloudUI.style.cursor = 'pointer';
-        setCloudUI.style.textAlign = 'center';
-        setCloudUI.title = 'Click to show cloud overlay.';
-        controlDiv.appendChild(setCloudUI);
-        
-        // Set CSS for the control interior
-        var setCloudText = document.createElement('div');
-        setCloudText.style.fontFamily = 'Arial,sans-serif';
-        setCloudText.style.fontSize = '12px';
-        setCloudText.style.paddingLeft = '4px';
-        setCloudText.style.paddingRight = '4px';
-        setCloudText.innerHTML = '<b>Cloud Overlay</b>';
-        setCloudUI.appendChild(setCloudText);
-        
-        // Setup the click event listener for Set Cloud:
-        // Set the control's cloud to the current Map center.
-        google.maps.event.addDomListener(setCloudUI, 'click', function() {
+    
+    
+    function button(buttonOptions, buttonAction) {
+   
+        function ButtonData(controlDiv, map) {
             
-            if (showCloud){
-                cloudLayer.setMap(map);
-                showCloud = false;
-            } else {
-                cloudLayer.setMap(null);
-                showCloud = true;
-            };
-        });
+            // Set CSS styles for the DIV containing the control
+            // Setting padding to 5 px will offset the control
+            // from the edge of the map
+            controlDiv.style.padding = '5px';
+            
+            // Set CSS for the setButton control border
+            var setButtonUI = document.createElement('div');
+            setButtonUI.style.backgroundColor = 'white';
+            setButtonUI.style.borderStyle = 'solid';
+            setButtonUI.style.borderWidth = '1px';
+            setButtonUI.style.cursor = 'pointer';
+            setButtonUI.style.textAlign = 'center';
+            setButtonUI.title = buttonOptions.mouseOver;
+            controlDiv.appendChild(setButtonUI);
+            
+            // Set CSS for the control interior
+            var setButtonText = document.createElement('div');
+            setButtonText.style.fontFamily = 'Arial,sans-serif';
+            setButtonText.style.fontSize = '12px';
+            setButtonText.style.paddingLeft = '4px';
+            setButtonText.style.paddingRight = '4px';
+            setButtonText.innerHTML = buttonOptions.htmlText;
+            setButtonUI.appendChild(setButtonText);
+            
+            // Setup the click event listener for Set Button:
+            // Set the control's button to the current Map center.
+            google.maps.event.addDomListener(setButtonUI, 'click', buttonAction());
+            
+        };
+        
+        var buttonControlDiv = document.createElement('div');
+        var buttonControl = new ButtonData(buttonControlDiv, map);
+        
+        buttonControlDiv.index = buttonOptions.index;
+        var position = new google.maps.ControlPosition
+
+        buttonOptions.location;
+        
+        map.controls[google.maps.ControlPosition.position].push(buttonControlDiv);
+        
     };
     
-    var cloudControlDiv = document.createElement('div');
-    var cloudControl = new CloudData(cloudControlDiv, map);
     
-    cloudControlDiv.index = 1;
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(cloudControlDiv);
+    
+    // Clould Layer Display
 
+    var cloudOptions = {
+        location: 'TOP_LEFT',
+        index: 1,
+        mouseOver: 'Click to show cloud overlay.',
+        htmlText: '<b>Cloud Overlay</b>'
+    };
+    
+    button(cloudOptions, function cloudAction() { 
+        if (showCloud){
+            cloudLayer.setMap(map);
+            showCloud = false;
+        } else {
+            cloudLayer.setMap(null);
+            showCloud = true;
+        };
+    });
+         
     
     
         
