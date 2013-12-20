@@ -363,6 +363,8 @@ $(function(){
         // Set the control's clear to the current Map center.
         google.maps.event.addDomListener(setClearUI, 'click', function() {
             auto_remove = true;
+            removeMarkers = true;
+            showAll = false;
         });
     };
     
