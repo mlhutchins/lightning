@@ -206,6 +206,14 @@ $(function(){
     }
     
     
+
+    // Function to check if a value is a number
+    
+    function isNumber(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+    
+    
     
     // Clould Layer Display
     // Define a property to hold the Cloud state
