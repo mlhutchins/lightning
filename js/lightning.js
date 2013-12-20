@@ -215,9 +215,7 @@ $(function(){
     }
     
     
-    
-    
-    
+    // General function for making on screen buttons
     
     function button(buttonOptions, buttonAction) {
    
@@ -257,11 +255,8 @@ $(function(){
         var buttonControl = new ButtonData(buttonControlDiv, map);
         
         buttonControlDiv.index = buttonOptions.index;
-        var position = new google.maps.ControlPosition
-
-        buttonOptions.location;
-        
-        map.controls[google.maps.ControlPosition.position].push(buttonControlDiv);
+        var position = buttonOptions.location;
+        map.controls[buttonOptions.location].push(buttonControlDiv);
         
     };
     
@@ -270,7 +265,7 @@ $(function(){
     // Clould Layer Display
 
     var cloudOptions = {
-        location: 'TOP_LEFT',
+        location: google.maps.ControlPosition.TOP_LEFT,
         index: 1,
         mouseOver: 'Click to show cloud overlay.',
         htmlText: '<b>Cloud Overlay</b>'
