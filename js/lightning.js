@@ -27,8 +27,7 @@ $(function(){
     var showBox = false; // Start with no subset box shown
     var showAll = false; // Don't show all loaded strokes on launch
     var removeMarkers = false; // Set removal of all markers to false
-    var showHeat = false; // Start with no heatmap shown
-    
+    var gradient = ['rgba(254,229,217,0)','rgba(254,229,217,1)', 'rgba(252,187,161,1)', 'rgba(252,146,114,1)', 'rgba(251,106,74,1)', 'rgba(222,45,38,1)', 'rgba(165,15,21,1)']; // Set Color Gradient for density
     // Internal storage
     var currentStrokes = 0; // Index of total strokes displayed
     var currentBoxStrokes = 0; // Index of strokes in box
@@ -284,7 +283,7 @@ $(function(){
         setShowUI.style.borderWidth = '1px';
         setShowUI.style.cursor = 'pointer';
         setShowUI.style.textAlign = 'center';
-        setShowUI.title = 'Click to show all strokes. Caution: may slow system.';
+        setShowUI.title = 'Click to show loaded stroke density';
         controlDiv.appendChild(setShowUI);
         
         // Set CSS for the control interior
@@ -293,7 +292,7 @@ $(function(){
         setShowText.style.fontSize = '12px';
         setShowText.style.paddingLeft = '4px';
         setShowText.style.paddingRight = '4px';
-        setShowText.innerHTML = '<b>Show All Strokes (Slow)</b>';
+        setShowText.innerHTML = '<b>Stroke Density</b>';
         setShowUI.appendChild(setShowText);
         
         // Setup the click event listener for Set Show:
@@ -309,7 +308,11 @@ $(function(){
                 heatmap = new google.maps.visualization.HeatmapLayer({
                     data: pointArray
                 });
- 
+            
+                heatmap.setOptions({
+                    gradient : gradient
+                });
+                            
                 heatmap.setMap(map);
                 showAll = true;
             };
@@ -323,7 +326,8 @@ $(function(){
     showControlDiv.index = 2;
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(showControlDiv);
 
-    
+
+        
     
     // Data flush button
     // Define a property to hold the Clear state
