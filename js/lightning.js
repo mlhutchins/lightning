@@ -249,7 +249,7 @@ $(function(){
             
             // Setup the click event listener for Set Button:
             // Set the control's button to the current Map center.
-            google.maps.event.addDomListener(setButtonUI, 'click', buttonAction());
+            google.maps.event.addDomListener(setButtonUI, 'click', buttonAction);
             
         };
         
@@ -276,7 +276,7 @@ $(function(){
         htmlText: '<b>Cloud Overlay</b>'
     };
     
-    button(cloudOptions, function cloudAction() { 
+    function cloudAction() { 
         if (showCloud){
             cloudLayer.setMap(map);
             showCloud = false;
@@ -284,8 +284,9 @@ $(function(){
             cloudLayer.setMap(null);
             showCloud = true;
         };
-    });
+    };
          
+    button(cloudOptions, cloudAction);
     
     
         
