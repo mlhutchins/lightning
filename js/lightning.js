@@ -371,8 +371,8 @@ $(function(){
     var clearControlDiv = document.createElement('div');
     var clearControl = new ClearData(clearControlDiv, map);
     
-    clearControlDiv.index = 1;
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(clearControlDiv);
+    clearControlDiv.index = 2;
+    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(clearControlDiv);
 
     
     
@@ -722,8 +722,8 @@ $(function(){
     var showControlDiv = document.createElement('div');
     var showControl = new ShowBox(showControlDiv, map);
     
-    showControlDiv.index = 3;
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(showControlDiv);
+    showControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(showControlDiv);
 
     
     // Create the selection box rectangle with listener for bounds change
