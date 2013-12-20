@@ -328,18 +328,18 @@ $(function(){
       
     // Play Data
     
-    var dataClearOptions = {
+    var dataPlayOptions = {
         location: google.maps.ControlPosition.TOP_CENTER,
         index: 3,
         mouseOver: 'Click to play.',
         htmlText: '<b>Play</b>'
     };
     
-    function dataClearAction() { 
+    function dataPlayAction() { 
         runPlay = true;
     };
          
-    button(dataClearOptions, dataClearAction);
+    button(dataPlayOptions, dataPlayAction);
    
     
     // Pause Data
@@ -664,7 +664,7 @@ $(function(){
                 firstInfo.innerHTML = 'Earliest Time Available: ' + firstUTC;
             };
         };
-        
+                
         // Remove strokes if clear button pressed, and reset pause timing
 		if(auto_remove) {
 			//Remove markers for all unreported locs, and the corrsponding locations entry.
