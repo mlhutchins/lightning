@@ -309,7 +309,7 @@ $(function(){
     var showControl = new ShowData(showControlDiv, map);
     
     showControlDiv.index = 2;
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(showControlDiv);
+    // map.controls[google.maps.ControlPosition.TOP_LEFT].push(showControlDiv);
 
     
     
