@@ -874,12 +874,14 @@ $(function(){
         if ((realTime - timeOffset) > (lastTime + 120) && lastTime!==-1e12){
             timeOffset = realTime - firstTime;
             runReal = false;
+            
         };
         
         // Pause at end of file
         if ((realTime - timeOffset) > (lastTime) && lastTime!==-1e12 && !runPause){
             pauseSet = true;
             timeOffset = timeOffset + 1;
+            speedFactor = 1;
         };
   
         // Force timeOffset to stay below timeOffsetMin
@@ -893,6 +895,7 @@ $(function(){
             runReal = false;
             runPause = false;
             runStart = false;
+            speedFactor = 1;
         };
         
         // Increase playback speed by speedFactor
