@@ -832,6 +832,7 @@ $(function(){
         if (runStart){
             timeOffset = realTime - firstTime;
             runReal = false;
+            runPause = false;
             runStart = false;
         };
         
