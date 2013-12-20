@@ -3,7 +3,7 @@ function json_generator()
 %
 %	Written by: Michael Hutchins
 
-delay = 120; %seconds
+delay = 600; %seconds
 maxStrokes = 5000; %strokes
 bPath = '/flash4/lightning/';
 jsonPath ='data/';

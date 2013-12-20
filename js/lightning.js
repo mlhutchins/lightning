@@ -8,7 +8,7 @@ $(function(){
     var endMag = 2; // Final marker size
     var decayTime = 0.5; // Decay of marker (size / second)
     var markerLifetime = (startMag - endMag) / decayTime; // Marker lifetime
-    var timeOffset = 240; // Delay between JSON data and current time
+    var timeOffset = 720; // Delay between JSON data and current time
     var timeOffsetMin = timeOffset; // Minimum offset from real time
     var getDelay = 1; // interval between server fetches (s)
 
