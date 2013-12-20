@@ -206,8 +206,6 @@ $(function(){
         return size;
     }
     
-    
-
     // Function to check if a value is a number
     
     function isNumber(n) {
@@ -261,7 +259,6 @@ $(function(){
     };
     
     
-    
     // Clould Layer Display
 
     var cloudOptions = {
@@ -283,465 +280,177 @@ $(function(){
          
     button(cloudOptions, cloudAction);
     
-    
         
     // Show All Strokes Button
-    // Define a property to hold the Show state
-    ShowData.prototype.show_ = null;
     
-    ShowData.prototype.setShow = function(show) {
-        this.show_ = show;
-    }
-        
-    function ShowData(controlDiv, map) {
-        
-        // Set CSS styles for the DIV containing the control
-        // Setting padding to 5 px will offset the control
-        // from the edge of the map
-        controlDiv.style.padding = '5px';
-        
-        // Set CSS for the setShow control border
-        var setShowUI = document.createElement('div');
-        setShowUI.style.backgroundColor = 'white';
-        setShowUI.style.borderStyle = 'solid';
-        setShowUI.style.borderWidth = '1px';
-        setShowUI.style.cursor = 'pointer';
-        setShowUI.style.textAlign = 'center';
-        setShowUI.title = 'Click to show loaded stroke density';
-        controlDiv.appendChild(setShowUI);
-        
-        // Set CSS for the control interior
-        var setShowText = document.createElement('div');
-        setShowText.style.fontFamily = 'Arial,sans-serif';
-        setShowText.style.fontSize = '12px';
-        setShowText.style.paddingLeft = '4px';
-        setShowText.style.paddingRight = '4px';
-        setShowText.innerHTML = '<b>Stroke Density</b>';
-        setShowUI.appendChild(setShowText);
-        
-        // Setup the click event listener for Set Show:
-        // Set the control's show to the current Map center.
-        google.maps.event.addDomListener(setShowUI, 'click', function() {
-            
-            if (showAll){
-                heatmap.setMap(null);
-                showAll = false;
-            } else {
-                        
-                showAll = true;
-                getStrokePoints = true;
-            };
-
-        });
+    var showAllOptions = {
+        location: google.maps.ControlPosition.TOP_LEFT,
+        index: 2,
+        mouseOver: 'Click to show loaded stroke density.',
+        htmlText: '<b>Stroke Density</b>'
     };
     
-    var showControlDiv = document.createElement('div');
-    var showControl = new ShowData(showControlDiv, map);
-    
-    showControlDiv.index = 2;
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(showControlDiv);
-
-
-        
-    
-    // Data flush button
-    // Define a property to hold the Clear state
-    ClearData.prototype.clear_ = null;
-    
-    ClearData.prototype.setClear = function(clear) {
-        this.clear_ = clear;
-    }
-        
-    function ClearData(controlDiv, map) {
-        
-        // Set CSS styles for the DIV containing the control
-        // Setting padding to 5 px will offset the control
-        // from the edge of the map
-        controlDiv.style.padding = '5px';
-        
-        // Set CSS for the setClear control border
-        var setClearUI = document.createElement('div');
-        setClearUI.style.backgroundColor = 'white';
-        setClearUI.style.borderStyle = 'solid';
-        setClearUI.style.borderWidth = '1px';
-        setClearUI.style.cursor = 'pointer';
-        setClearUI.style.textAlign = 'center';
-        setClearUI.title = 'Click to clear current data.';
-        controlDiv.appendChild(setClearUI);
-        
-        // Set CSS for the control interior
-        var setClearText = document.createElement('div');
-        setClearText.style.fontFamily = 'Arial,sans-serif';
-        setClearText.style.fontSize = '12px';
-        setClearText.style.paddingLeft = '4px';
-        setClearText.style.paddingRight = '4px';
-        setClearText.innerHTML = '<b>Clear Data</b>';
-        setClearUI.appendChild(setClearText);
-        
-        // Setup the click event listener for Set Clear:
-        // Set the control's clear to the current Map center.
-        google.maps.event.addDomListener(setClearUI, 'click', function() {
-            auto_remove = true;
-            removeMarkers = true;
+    function showAllAction() { 
+        if (showAll){
             heatmap.setMap(null);
             showAll = false;
-            runPlay = true;
-        });
+        } else {
+                    
+            showAll = true;
+            getStrokePoints = true;
+        };
+    };
+         
+    button(showAllOptions, showAllAction);
+    
+    
+    // Data Flush Button
+    
+    var dataClearOptions = {
+        location: google.maps.ControlPosition.RIGHT_TOP,
+        index: 2,
+        mouseOver: 'Click to clear current data.',
+        htmlText: '<b>Clear Data</b>'
     };
     
-    var clearControlDiv = document.createElement('div');
-    var clearControl = new ClearData(clearControlDiv, map);
-    
-    clearControlDiv.index = 2;
-    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(clearControlDiv);
-
-    
+    function dataClearAction() { 
+        auto_remove = true;
+        removeMarkers = true;
+        heatmap.setMap(null);
+        showAll = false;
+        runPlay = true;
+    };
+         
+    button(dataClearOptions, dataClearAction);
+   
     
     // Time Controls
+      
+    // Play Data
+    
+    var dataClearOptions = {
+        location: google.maps.ControlPosition.TOP_CENTER,
+        index: 3,
+        mouseOver: 'Click to play.',
+        htmlText: '<b>Play</b>'
+    };
+    
+    function dataClearAction() { 
+        runPlay = true;
+    };
+         
+    button(dataClearOptions, dataClearAction);
+   
+    
+    // Pause Data
+    
+    var dataPauseOptions = {
+        location: google.maps.ControlPosition.TOP_CENTER,
+        index: 2,
+        mouseOver: 'Click to pause.',
+        htmlText: '<b>Pause</b>'
+    };
+    
+    function dataPauseAction() { 
+        pauseSet = true;
+    };
+         
+    button(dataPauseOptions, dataPauseAction);
 
-    // Play data
-    PlayData.prototype.clear_ = null;
+        
     
-    PlayData.prototype.setPlay = function(clear) {
-        this.clear_ = clear;
-    }
-        
-    function PlayData(controlDiv, map) {
-        
-        // Set CSS styles for the DIV containing the control
-        // Setting padding to 5 px will offset the control
-        // from the edge of the map
-        controlDiv.style.padding = '5px';
-        
-        // Set CSS for the setPlay control border
-        var setPlayUI = document.createElement('div');
-        setPlayUI.style.backgroundColor = 'white';
-        setPlayUI.style.borderStyle = 'solid';
-        setPlayUI.style.borderWidth = '1px';
-        setPlayUI.style.cursor = 'pointer';
-        setPlayUI.style.textAlign = 'center';
-        setPlayUI.title = 'Click to resume.';
-        controlDiv.appendChild(setPlayUI);
-        
-        // Set CSS for the control interior
-        var setPlayText = document.createElement('div');
-        setPlayText.style.fontFamily = 'Arial,sans-serif';
-        setPlayText.style.fontSize = '12px';
-        setPlayText.style.paddingLeft = '4px';
-        setPlayText.style.paddingRight = '4px';
-        setPlayText.innerHTML = '<b>Resume</b>';
-        setPlayUI.appendChild(setPlayText);
-        
-        // Setup the click event listener for Set Play:
-        // Set the control's play to the current Map center.
-        google.maps.event.addDomListener(setPlayUI, 'click', function() {
-            runPlay = true;
-        });
+    // Resume Realtime
+
+    var dataRealOptions = {
+        location: google.maps.ControlPosition.TOP_CENTER,
+        index: 5,
+        mouseOver: 'Click to reset to real-time playback.',
+        htmlText: '<b>Real-Time</b>'
     };
     
-    var playControlDiv = document.createElement('div');
-    var playControl = new PlayData(playControlDiv, map);
-    
-    playControlDiv.index = 3;
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(playControlDiv);
-    
-    
-    // Pause data
-    PauseData.prototype.clear_ = null;
-    
-    PauseData.prototype.setPause = function(clear) {
-        this.clear_ = clear;
-    }
-        
-    function PauseData(controlDiv, map) {
-        
-        // Set CSS styles for the DIV containing the control
-        // Setting padding to 5 px will offset the control
-        // from the edge of the map
-        controlDiv.style.padding = '5px';
-        
-        // Set CSS for the setPause control border
-        var setPauseUI = document.createElement('div');
-        setPauseUI.style.backgroundColor = 'white';
-        setPauseUI.style.borderStyle = 'solid';
-        setPauseUI.style.borderWidth = '1px';
-        setPauseUI.style.cursor = 'pointer';
-        setPauseUI.style.textAlign = 'center';
-        setPauseUI.title = 'Click to pause playback.';
-        controlDiv.appendChild(setPauseUI);
-        
-        // Set CSS for the control interior
-        var setPauseText = document.createElement('div');
-        setPauseText.style.fontFamily = 'Arial,sans-serif';
-        setPauseText.style.fontSize = '12px';
-        setPauseText.style.paddingLeft = '4px';
-        setPauseText.style.paddingRight = '4px';
-        setPauseText.innerHTML = '<b>Pause</b>';
-        setPauseUI.appendChild(setPauseText);
-        
-        // Setup the click event listener for Set Pause:
-        // Set the control's pause to the current Map center.
-        google.maps.event.addDomListener(setPauseUI, 'click', function() {
-            pauseSet = true;
-        });
+    function dataRealAction() { 
+        runReal = true;
+        removeMarkers = true;
     };
-    
-    var pauseControlDiv = document.createElement('div');
-    var pauseControl = new PauseData(pauseControlDiv, map);
-    
-    pauseControlDiv.index = 2;
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(pauseControlDiv);
-    
-    
-    // Resume realtime data
-    RealData.prototype.clear_ = null;
-    
-    RealData.prototype.setReal = function(clear) {
-        this.clear_ = clear;
-    }
+         
+    button(dataRealOptions, dataRealAction);
+
         
-    function RealData(controlDiv, map) {
-        
-        // Set CSS styles for the DIV containing the control
-        // Setting padding to 5 px will offset the control
-        // from the edge of the map
-        controlDiv.style.padding = '5px';
-        
-        // Set CSS for the setReal control border
-        var setRealUI = document.createElement('div');
-        setRealUI.style.backgroundColor = 'white';
-        setRealUI.style.borderStyle = 'solid';
-        setRealUI.style.borderWidth = '1px';
-        setRealUI.style.cursor = 'pointer';
-        setRealUI.style.textAlign = 'center';
-        setRealUI.title = 'Click to reset to real-time playback.';
-        controlDiv.appendChild(setRealUI);
-        
-        // Set CSS for the control interior
-        var setRealText = document.createElement('div');
-        setRealText.style.fontFamily = 'Arial,sans-serif';
-        setRealText.style.fontSize = '12px';
-        setRealText.style.paddingLeft = '4px';
-        setRealText.style.paddingRight = '4px';
-        setRealText.innerHTML = '<b>Real-Time</b>';
-        setRealUI.appendChild(setRealText);
-        
-        // Setup the click event listener for Set Real:
-        // Set the control's real to the current Map center.
-        google.maps.event.addDomListener(setRealUI, 'click', function() {
-            runReal = true;
-            removeMarkers = true;
-        });
-    };
-    
-    var realControlDiv = document.createElement('div');
-    var realControl = new RealData(realControlDiv, map);
-    
-    realControlDiv.index = 5;
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(realControlDiv);
-    
+
+    // Jump Forward
            
-    // Set time forward 
-    ForwardData.prototype.clear_ = null;
-    
-    ForwardData.prototype.setForward = function(clear) {
-        this.clear_ = clear;
-    };
-        
-    function ForwardData(controlDiv, map) {
-        
-        // Set CSS styles for the DIV containing the control
-        // Setting padding to 5 px will offset the control
-        // from the edge of the map
-        controlDiv.style.padding = '5px';
-        
-        // Set CSS for the setForward control border
-        var setForwardUI = document.createElement('div');
-        setForwardUI.style.backgroundColor = 'white';
-        setForwardUI.style.borderStyle = 'solid';
-        setForwardUI.style.borderWidth = '1px';
-        setForwardUI.style.cursor = 'pointer';
-        setForwardUI.style.textAlign = 'center';
-        setForwardUI.title = 'Click to move forward 30 seconds.';
-        controlDiv.appendChild(setForwardUI);
-        
-        // Set CSS for the control interior
-        var setForwardText = document.createElement('div');
-        setForwardText.style.fontFamily = 'Arial,sans-serif';
-        setForwardText.style.fontSize = '12px';
-        setForwardText.style.paddingLeft = '4px';
-        setForwardText.style.paddingRight = '4px';
-        setForwardText.innerHTML = '<b>+30 Seconds</b>';
-        setForwardUI.appendChild(setForwardText);
-        
-        // Setup the click event listener for Set Forward:
-        // Set the control's forward to the current Map center.
-        google.maps.event.addDomListener(setForwardUI, 'click', function() {
-            runForward = true;
-        });
+    var dataForwardOptions = {
+        location: google.maps.ControlPosition.TOP_CENTER,
+        index: 4,
+        mouseOver: 'Click to move forward 30 seconds.',
+        htmlText: '<b>+30 Seconds</b>'
     };
     
-    var forwardControlDiv = document.createElement('div');
-    var forwardControl = new ForwardData(forwardControlDiv, map);
-    
-    forwardControlDiv.index = 4;
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(forwardControlDiv);
-    
-    
-    
-    // Set time backward 
-    BackwardData.prototype.clear_ = null;
-    
-    BackwardData.prototype.setBackward = function(clear) {
-        this.clear_ = clear;
+    function dataForwardAction() { 
+        runForward = true;
     };
-        
-    function BackwardData(controlDiv, map) {
-        
-        // Set CSS styles for the DIV containing the control
-        // Setting padding to 5 px will offset the control
-        // from the edge of the map
-        controlDiv.style.padding = '5px';
-        
-        // Set CSS for the setBackward control border
-        var setBackwardUI = document.createElement('div');
-        setBackwardUI.style.backgroundColor = 'white';
-        setBackwardUI.style.borderStyle = 'solid';
-        setBackwardUI.style.borderWidth = '1px';
-        setBackwardUI.style.cursor = 'pointer';
-        setBackwardUI.style.textAlign = 'center';
-        setBackwardUI.title = 'Click to move back 30 seconds.';
-        controlDiv.appendChild(setBackwardUI);
-        
-        // Set CSS for the control interior
-        var setBackwardText = document.createElement('div');
-        setBackwardText.style.fontFamily = 'Arial,sans-serif';
-        setBackwardText.style.fontSize = '12px';
-        setBackwardText.style.paddingLeft = '4px';
-        setBackwardText.style.paddingRight = '4px';
-        setBackwardText.innerHTML = '<b>-30 Seconds</b>';
-        setBackwardUI.appendChild(setBackwardText);
-        
-        // Setup the click event listener for Set Backward:
-        // Set the control's backward to the current Map center.
-        google.maps.event.addDomListener(setBackwardUI, 'click', function() {
-            runBackward = true;
-        });
-    }
-    
-    var backwardControlDiv = document.createElement('div');
-    var backwardControl = new BackwardData(backwardControlDiv, map);
-    
-    backwardControlDiv.index = 1;
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(backwardControlDiv);
+         
+    button(dataForwardOptions, dataForwardAction);
     
     
-    // Set time to start
-    
-    StartData.prototype.start_ = null;
-    
-    StartData.prototype.setStart = function(start) {
-        this.start_ = start;
+
+    // Jump Backward
+           
+    var dataBackwardOptions = {
+        location: google.maps.ControlPosition.TOP_CENTER,
+        index: 1,
+        mouseOver: 'Click to move backwards 30 seconds.',
+        htmlText: '<b>-30 Seconds</b>'
     };
-        
-    function StartData(controlDiv, map) {
-        
-        // Set CSS styles for the DIV containing the control
-        // Setting padding to 5 px will offset the control
-        // from the edge of the map
-        controlDiv.style.padding = '5px';
-        
-        // Set CSS for the setStart control border
-        var setStartUI = document.createElement('div');
-        setStartUI.style.backgroundColor = 'white';
-        setStartUI.style.borderStyle = 'solid';
-        setStartUI.style.borderWidth = '1px';
-        setStartUI.style.cursor = 'pointer';
-        setStartUI.style.textAlign = 'center';
-        setStartUI.title = 'Click to go to start of loaded strokes.';
-        controlDiv.appendChild(setStartUI);
-        
-        // Set CSS for the control interior
-        var setStartText = document.createElement('div');
-        setStartText.style.fontFamily = 'Arial,sans-serif';
-        setStartText.style.fontSize = '12px';
-        setStartText.style.paddingLeft = '4px';
-        setStartText.style.paddingRight = '4px';
-        setStartText.innerHTML = '<b>Start</b>';
-        setStartUI.appendChild(setStartText);
-        
-        // Setup the click event listener for Set Start:
-        // Set the control's start to the current Map center.
-        google.maps.event.addDomListener(setStartUI, 'click', function() {
-            runStart = true
-        });
-    }
     
-    var startControlDiv = document.createElement('div');
-    var startControl = new StartData(startControlDiv, map);
+    function dataBackwardAction() { 
+        runBackward = true;
+    };
+         
+    button(dataBackwardOptions, dataBackwardAction);
+
     
-    startControlDiv.index = 0;
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(startControlDiv);
+    // Jump To Start
+           
+    var dataStartOptions = {
+        location: google.maps.ControlPosition.TOP_CENTER,
+        index: 0,
+        mouseOver: 'Click to go to start of loaded strokes.',
+        htmlText: '<b>Start</b>'
+    };
     
+    function dataStartAction() { 
+        runStart = true;
+    };
+         
+    button(dataStartOptions, dataStartAction);
     
     
     // Subset Box Activation Button
-    // Define a property to hold the Show state
-    ShowBox.prototype.show_ = null;
-    
-    ShowBox.prototype.setShow = function(show) {
-        this.show_ = show;
-    }
-        
-    function ShowBox(controlDiv, map) {
-        
-        // Set CSS styles for the DIV containing the control
-        // Setting padding to 5 px will offset the control
-        // from the edge of the map
-        controlDiv.style.padding = '5px';
-        
-        // Set CSS for the setShow control border
-        var setShowUI = document.createElement('div');
-        setShowUI.style.backgroundColor = 'white';
-        setShowUI.style.borderStyle = 'solid';
-        setShowUI.style.borderWidth = '1px';
-        setShowUI.style.cursor = 'pointer';
-        setShowUI.style.textAlign = 'center';
-        setShowUI.title = 'Click to show the selection box.';
-        controlDiv.appendChild(setShowUI);
-        
-        // Set CSS for the control interior
-        var setShowText = document.createElement('div');
-        setShowText.style.fontFamily = 'Arial,sans-serif';
-        setShowText.style.fontSize = '12px';
-        setShowText.style.paddingLeft = '4px';
-        setShowText.style.paddingRight = '4px';
-        setShowText.innerHTML = '<b>Selection Box</b>';
-        setShowUI.appendChild(setShowText);
-        
-        // Setup the click event listener for Set Show:
-        // Set the control's show to the current Map center.
-        google.maps.event.addDomListener(setShowUI, 'click', function() {
-            if (showBox){
-                showBox = false;
-                rectangle.setMap(null);   
-
-            } else {
-                showBox = true;
-                rectangle.setMap(map);
-
-            };
-        });
+           
+    var boxOptions = {
+        location: google.maps.ControlPosition.RIGHT_TOP,
+        index: 1,
+        mouseOver: 'Click to show the selection box.',
+        htmlText: '<b>Selection Box</b>'
     };
     
-    var showControlDiv = document.createElement('div');
-    var showControl = new ShowBox(showControlDiv, map);
-    
-    showControlDiv.index = 1;
-    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(showControlDiv);
+    function boxAction() { 
+        if (showBox){
+            showBox = false;
+            rectangle.setMap(null);   
 
+        } else {
+            showBox = true;
+            rectangle.setMap(map);
+
+        };
+    };
+         
+    button(boxOptions, boxAction);
     
-    
+
+
     
     // Time Playback Speed Control
     // Create a div to hold everything else
