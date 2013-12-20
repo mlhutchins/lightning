@@ -1106,6 +1106,8 @@ $(function(){
             getStrokePoints = false;
         }
         
+        ajaxObj.errorCount = 0;
+        
 	}
 
 	var ajaxObj = {//Object to save cluttering the namespace.
