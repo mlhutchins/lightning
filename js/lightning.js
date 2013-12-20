@@ -3,16 +3,17 @@ $(function(){
     // Initialize storage array for stroke data
     var locations = {};//A repository for markers (and the data from which they were contructed).
 
-    // Internal map settings
+    // Map Display settings
     var startMag = 6; // Initial marker size
     var endMag = 2; // Final marker size
     var decayTime = 0.5; // Decay of marker (size / second)
     var markerLifetime = (startMag - endMag) / decayTime; // Marker lifetime
-    var timeOffset = 720; // Delay between JSON data and current time
+    var timeOffset = 720; // Initial Delay between display data and current time
     var timeOffsetMin = timeOffset; // Minimum offset from real time
     var getDelay = 1; // interval between server fetches (s)
     var densityRadius = 25; // Radius of the heatmap (pixels)
-    
+    var gradient = ['rgba(254,229,217,0)','rgba(254,229,217,1)', 'rgba(252,187,161,1)', 'rgba(252,146,114,1)', 'rgba(251,106,74,1)', 'rgba(222,45,38,1)', 'rgba(165,15,21,1)']; // Set Color Gradient for density
+
     // Initial states and values for the buttons
     var runPause = false; // flag to pause playback
     var runPlay = false; // flag to resume playback
@@ -28,7 +29,6 @@ $(function(){
     var showBox = false; // Start with no subset box shown
     var showAll = false; // Don't show all loaded strokes on launch
     var removeMarkers = false; // Set removal of all markers to false
-    var gradient = ['rgba(254,229,217,0)','rgba(254,229,217,1)', 'rgba(252,187,161,1)', 'rgba(252,146,114,1)', 'rgba(251,106,74,1)', 'rgba(222,45,38,1)', 'rgba(165,15,21,1)']; // Set Color Gradient for density
     var getStrokePoints = false; // Start off not accumulating strokes into a heatmap
     var runStart = false; // Return to start variable
     
@@ -38,10 +38,13 @@ $(function(){
     var lastGet = 0; // holds time of last server fetch
     var strokePoints = []; // Array to hold stroke data
     var heatmap;
+    
     // Cloud layer settings
     var cloudLayer = new google.maps.weather.CloudLayer();
     var showCloud = true; 
     
+    
+    // Create Google Map
 	var map = new google.maps.Map(document.getElementById('map-canvas'), {
 		zoom: 3,
 		maxZoom: 8,
@@ -51,16 +54,7 @@ $(function(){
 		mapTypeId: google.maps.MapTypeId.SATELLITE
 	});
     
-	var infowindow = new google.maps.InfoWindow();
-    
-    window.dno = new DayNightOverlay({
-                    map: map,
-                    fillColor: 'rgba(0,0,0,0.3)',
-                    date: new Date(Date.UTC(2011,0,1))
-                });
-
-    window.dateField = document.getElementById('date');
-    
+    // Google Map color and style
     var styles = [
       {
         "elementType": "geometry",
@@ -91,14 +85,24 @@ $(function(){
     ];
 
     map.setOptions({styles:styles});
-	
+
+    
+    // Initialize day/night terminator
+    window.dno = new DayNightOverlay({
+                    map: map,
+                    fillColor: 'rgba(0,0,0,0.3)',
+                    date: new Date(Date.UTC(2011,0,1))
+                });
+    window.dateField = document.getElementById('date');
+    
+    
     // Map Title
     var myTitle = document.createElement('div');
     myTitle.style.color = 'white';
     myTitle.innerHTML = '<h1>Real Time Lightning Locations</h1>';
     map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(myTitle);
     
-    // WWLLN name / link
+    // WWLLN clickable link in title
     function WWLLNText(controlDiv) {
         controlDiv.style.padding = '0px';
         var logo = document.createElement('h1');
@@ -112,7 +116,7 @@ $(function(){
     });
     };
  
-    // Add Name oject to map
+    // Add WWLLN link to map title
     var logoControlDiv = document.createElement('DIV');
     var logoControl = new WWLLNText(logoControlDiv);
     logoControlDiv.index = 0; // used for ordering
@@ -139,7 +143,6 @@ $(function(){
     map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(logoControlDiv);
     
     // Load WWLLN Stations
-    
     var stations = (function() {
             var json = null;
             $.ajax({
@@ -155,8 +158,7 @@ $(function(){
         })();
 
     // Create Station markers 
-
-    infowindow = new google.maps.InfoWindow(); 
+    var infowindow = new google.maps.InfoWindow(); 
 
     for (var key in stations) {
         var latlng = new google.maps.LatLng(stations[key].lat,stations[key].long)
@@ -179,7 +181,8 @@ $(function(){
           })(marker, key));
     };
     
-    // Stroke marker style
+    
+    // Marker style for strokes
     function getCircle(magnitude) {
         return {
             path: google.maps.SymbolPath.CIRCLE,
@@ -207,14 +210,12 @@ $(function(){
     }
     
     // Function to check if a value is a number
-    
     function isNumber(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
     
     
     // General function for making on screen buttons
-    
     function button(buttonOptions, buttonAction) {
    
         function ButtonData(controlDiv, map) {
@@ -258,6 +259,9 @@ $(function(){
         
     };
     
+    /*
+        Create the on screen buttons and controls
+    */
     
     // Clould Layer Display
 
@@ -448,8 +452,6 @@ $(function(){
     };
          
     button(boxOptions, boxAction);
-    
-
 
     
     // Time Playback Speed Control
@@ -505,7 +507,7 @@ $(function(){
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(controlDiv);
     
     
-    
+    // Create the selection box rectable
     
     // Create the selection box rectangle with listener for bounds change
     // Draw and set the rectangle 
