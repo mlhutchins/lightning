@@ -28,6 +28,8 @@ $(function(){
     var showAll = false; // Don't show all loaded strokes on launch
     var removeMarkers = false; // Set removal of all markers to false
     var gradient = ['rgba(254,229,217,0)','rgba(254,229,217,1)', 'rgba(252,187,161,1)', 'rgba(252,146,114,1)', 'rgba(251,106,74,1)', 'rgba(222,45,38,1)', 'rgba(165,15,21,1)']; // Set Color Gradient for density
+    var getStrokePoints = false; // Start off not accumulating strokes into a heatmap
+    
     // Internal storage
     var currentStrokes = 0; // Index of total strokes displayed
     var currentBoxStrokes = 0; // Index of strokes in box
@@ -304,17 +306,8 @@ $(function(){
                 showAll = false;
             } else {
                         
-                var pointArray = new google.maps.MVCArray(strokePoints);
-                heatmap = new google.maps.visualization.HeatmapLayer({
-                    data: pointArray
-                });
-            
-                heatmap.setOptions({
-                    gradient : gradient
-                });
-                            
-                heatmap.setMap(map);
                 showAll = true;
+                getStrokePoints = true;
             };
 
         });
@@ -894,14 +887,17 @@ $(function(){
             lastGet = realTime
         };
         
-        strokePoints = [];
+        if (getStrokePoints){
+            strokePoints = [];
+        };
         
         $.each(locations, function(key, loc) {
        
-            
-            // Add strokes to strokePoint array
-            var stroke = new google.maps.LatLng(locations[key].lat,locations[key].long)
-            strokePoints.push(stroke)
+            if (getStrokePoints){
+                // Add strokes to strokePoint array
+                var stroke = new google.maps.LatLng(locations[key].lat,locations[key].long)
+                strokePoints.push(stroke)
+            };
             
             // Only create a marker for the current time window
             if(locations[key].marker == undefined && loc.mag > 0){
@@ -966,6 +962,21 @@ $(function(){
             
 		});
 
+        if (getStrokePoints){
+            
+            var pointArray = new google.maps.MVCArray(strokePoints);
+            heatmap = new google.maps.visualization.HeatmapLayer({
+                data: pointArray
+            });
+        
+            heatmap.setOptions({
+                gradient : gradient
+            });
+                        
+            heatmap.setMap(map);
+            getStrokePoints = false;
+        }
+        
 	}
 
 	var ajaxObj = {//Object to save cluttering the namespace.
