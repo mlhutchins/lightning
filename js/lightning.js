@@ -368,7 +368,9 @@ $(function(){
         google.maps.event.addDomListener(setClearUI, 'click', function() {
             auto_remove = true;
             removeMarkers = true;
+            heatmap.setMap(null);
             showAll = false;
+            runPlay = true;
         });
     };
     
@@ -832,7 +834,7 @@ $(function(){
                 delete locations[key];
 			});
             auto_remove = false;
-            runReal = true
+            runReal = false
             firstTime = 1e12;
 		}
 
