@@ -27,11 +27,13 @@ $(function(){
     var showBox = false; // Start with no subset box shown
     var showAll = false; // Don't show all loaded strokes on launch
     var removeMarkers = false; // Set removal of all markers to false
+    var gradient = ['rgba(254,229,217,0)','rgba(254,229,217,1)', 'rgba(252,187,161,1)', 'rgba(252,146,114,1)', 'rgba(251,106,74,1)', 'rgba(222,45,38,1)', 'rgba(165,15,21,1)']; // Set Color Gradient for density
     // Internal storage
     var currentStrokes = 0; // Index of total strokes displayed
     var currentBoxStrokes = 0; // Index of strokes in box
     var lastGet = 0; // holds time of last server fetch
-    
+    var strokePoints = []; // Array to hold stroke data
+    var heatmap;
     // Cloud layer settings
     var cloudLayer = new google.maps.weather.CloudLayer();
     var showCloud = true; 
@@ -44,6 +46,7 @@ $(function(){
 		center: new google.maps.LatLng(40, 0),
 		mapTypeId: google.maps.MapTypeId.SATELLITE
 	});
+    
 	var infowindow = new google.maps.InfoWindow();
     
     window.dno = new DayNightOverlay({
@@ -280,7 +283,7 @@ $(function(){
         setShowUI.style.borderWidth = '1px';
         setShowUI.style.cursor = 'pointer';
         setShowUI.style.textAlign = 'center';
-        setShowUI.title = 'Click to show all strokes. Caution: may slow system.';
+        setShowUI.title = 'Click to show loaded stroke density';
         controlDiv.appendChild(setShowUI);
         
         // Set CSS for the control interior
@@ -289,7 +292,7 @@ $(function(){
         setShowText.style.fontSize = '12px';
         setShowText.style.paddingLeft = '4px';
         setShowText.style.paddingRight = '4px';
-        setShowText.innerHTML = '<b>Show All Strokes (Slow)</b>';
+        setShowText.innerHTML = '<b>Stroke Density</b>';
         setShowUI.appendChild(setShowText);
         
         // Setup the click event listener for Set Show:
@@ -297,11 +300,23 @@ $(function(){
         google.maps.event.addDomListener(setShowUI, 'click', function() {
             
             if (showAll){
+                heatmap.setMap(null);
                 showAll = false;
-                removeMarkers = true;
             } else {
+                        
+                var pointArray = new google.maps.MVCArray(strokePoints);
+                heatmap = new google.maps.visualization.HeatmapLayer({
+                    data: pointArray
+                });
+            
+                heatmap.setOptions({
+                    gradient : gradient
+                });
+                            
+                heatmap.setMap(map);
                 showAll = true;
             };
+
         });
     };
     
@@ -311,7 +326,8 @@ $(function(){
     showControlDiv.index = 2;
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(showControlDiv);
 
-    
+
+        
     
     // Data flush button
     // Define a property to hold the Clear state
@@ -351,6 +367,8 @@ $(function(){
         // Set the control's clear to the current Map center.
         google.maps.event.addDomListener(setClearUI, 'click', function() {
             auto_remove = true;
+            removeMarkers = true;
+            showAll = false;
         });
     };
     
@@ -495,7 +513,6 @@ $(function(){
         // Set the control's real to the current Map center.
         google.maps.event.addDomListener(setRealUI, 'click', function() {
             runReal = true;
-            showAll = false;
             removeMarkers = true;
         });
     };
@@ -875,9 +892,14 @@ $(function(){
             lastGet = realTime
         };
         
+        strokePoints = [];
         
         $.each(locations, function(key, loc) {
        
+            
+            // Add strokes to strokePoint array
+            var stroke = new google.maps.LatLng(locations[key].lat,locations[key].long)
+            strokePoints.push(stroke)
             
             // Only create a marker for the current time window
             if(locations[key].marker == undefined && loc.mag > 0){
@@ -916,13 +938,6 @@ $(function(){
                     // Update stroke size
                     loc.mag = timeSize(currentTime, loc.unixTime);
                     
-                    if (showAll){
-                        
-                        loc.mag = (startMag - endMag)/2 + endMag;
-                        currentStrokes = null;
-                        currentBoxStrokes = null;
-                    };
-                    
                     // If there is a marker, update marker size
                     if (locations[key].marker!==undefined){
                         // Update markers
@@ -948,8 +963,7 @@ $(function(){
                         
             
 		});
-        
-        
+
 	}
 
 	var ajaxObj = {//Object to save cluttering the namespace.
