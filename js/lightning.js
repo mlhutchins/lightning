@@ -11,7 +11,8 @@ $(function(){
     var timeOffset = 720; // Delay between JSON data and current time
     var timeOffsetMin = timeOffset; // Minimum offset from real time
     var getDelay = 1; // interval between server fetches (s)
-
+    var densityRadius = 25; // Radius of the heatmap (pixels)
+    
     // Initial states and values for the buttons
     var runPause = false; // flag to pause playback
     var runPlay = false; // flag to resume playback
@@ -1099,7 +1100,8 @@ $(function(){
             });
         
             heatmap.setOptions({
-                gradient : gradient
+                gradient : gradient,
+                radius: densityRadius
             });
                         
             heatmap.setMap(map);
