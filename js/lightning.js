@@ -1117,7 +1117,7 @@ $(function(){
 		},
 		delay: 100,//(milliseconds) the interval between loops
 		errorCount: 0,//running total of ajax errors.
-		errorThreshold: 5,//the number of ajax errors beyond which the get cycle should cease.
+		errorThreshold: 10,//the number of ajax errors beyond which the get cycle should cease.
 		ticker: null,//setTimeout reference - allows the get cycle to be cancelled with clearTimeout(ajaxObj.ticker);
 		get: function() { //a function which initiates 
 			if(ajaxObj.errorCount < ajaxObj.errorThreshold) {
@@ -1125,7 +1125,7 @@ $(function(){
 			}
 		},
 		fail: function(jqXHR, textStatus, errorThrown) {
-			console.log(errorThrown);
+			console.log('Error Count: ' + ajaxObj.errorCount + ', ' + errorThrown);
 			ajaxObj.errorCount++;
 		}
 	};
