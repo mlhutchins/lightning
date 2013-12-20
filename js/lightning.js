@@ -1026,6 +1026,9 @@ $(function(){
             
 		});
 
+        
+        // Create and set heatmap / stroke density
+        
         if (getStrokePoints){
             
             var pointArray = new google.maps.MVCArray(strokePoints);
