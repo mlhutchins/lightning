@@ -28,6 +28,9 @@ $(function(){
     var showAll = false; // Don't show all loaded strokes on launch
     var removeMarkers = false; // Set removal of all markers to false
     var gradient = ['rgba(254,229,217,0)','rgba(254,229,217,1)', 'rgba(252,187,161,1)', 'rgba(252,146,114,1)', 'rgba(251,106,74,1)', 'rgba(222,45,38,1)', 'rgba(165,15,21,1)']; // Set Color Gradient for density
+    var getStrokePoints = false; // Start off not accumulating strokes into a heatmap
+    var runStart = false; // Return to start variable
+    
     // Internal storage
     var currentStrokes = 0; // Index of total strokes displayed
     var currentBoxStrokes = 0; // Index of strokes in box
@@ -203,6 +206,14 @@ $(function(){
     }
     
     
+
+    // Function to check if a value is a number
+    
+    function isNumber(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+    
+    
     
     // Clould Layer Display
     // Define a property to hold the Cloud state
@@ -304,17 +315,8 @@ $(function(){
                 showAll = false;
             } else {
                         
-                var pointArray = new google.maps.MVCArray(strokePoints);
-                heatmap = new google.maps.visualization.HeatmapLayer({
-                    data: pointArray
-                });
-            
-                heatmap.setOptions({
-                    gradient : gradient
-                });
-                            
-                heatmap.setMap(map);
                 showAll = true;
+                getStrokePoints = true;
             };
 
         });
@@ -377,8 +379,8 @@ $(function(){
     var clearControlDiv = document.createElement('div');
     var clearControl = new ClearData(clearControlDiv, map);
     
-    clearControlDiv.index = 1;
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(clearControlDiv);
+    clearControlDiv.index = 2;
+    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(clearControlDiv);
 
     
     
@@ -621,6 +623,55 @@ $(function(){
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(backwardControlDiv);
     
     
+    // Set time to start
+    
+    StartData.prototype.start_ = null;
+    
+    StartData.prototype.setStart = function(start) {
+        this.start_ = start;
+    };
+        
+    function StartData(controlDiv, map) {
+        
+        // Set CSS styles for the DIV containing the control
+        // Setting padding to 5 px will offset the control
+        // from the edge of the map
+        controlDiv.style.padding = '5px';
+        
+        // Set CSS for the setStart control border
+        var setStartUI = document.createElement('div');
+        setStartUI.style.backgroundColor = 'white';
+        setStartUI.style.borderStyle = 'solid';
+        setStartUI.style.borderWidth = '1px';
+        setStartUI.style.cursor = 'pointer';
+        setStartUI.style.textAlign = 'center';
+        setStartUI.title = 'Click to go to start of loaded strokes.';
+        controlDiv.appendChild(setStartUI);
+        
+        // Set CSS for the control interior
+        var setStartText = document.createElement('div');
+        setStartText.style.fontFamily = 'Arial,sans-serif';
+        setStartText.style.fontSize = '12px';
+        setStartText.style.paddingLeft = '4px';
+        setStartText.style.paddingRight = '4px';
+        setStartText.innerHTML = '<b>Start</b>';
+        setStartUI.appendChild(setStartText);
+        
+        // Setup the click event listener for Set Start:
+        // Set the control's start to the current Map center.
+        google.maps.event.addDomListener(setStartUI, 'click', function() {
+            runStart = true
+        });
+    }
+    
+    var startControlDiv = document.createElement('div');
+    var startControl = new StartData(startControlDiv, map);
+    
+    startControlDiv.index = 0;
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(startControlDiv);
+    
+    
+    
     // Subset Box Activation Button
     // Define a property to hold the Show state
     ShowBox.prototype.show_ = null;
@@ -673,9 +724,66 @@ $(function(){
     var showControlDiv = document.createElement('div');
     var showControl = new ShowBox(showControlDiv, map);
     
-    showControlDiv.index = 3;
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(showControlDiv);
+    showControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(showControlDiv);
 
+    
+    
+    
+    // Time Playback Speed Control
+    // Create a div to hold everything else
+    var controlDiv = document.createElement('DIV');
+    controlDiv.id = "controls";
+    controlDiv.style.backgroundColor = 'white';
+    controlDiv.style.borderStyle = 'solid';
+    controlDiv.style.borderWidth = '1px';
+    controlDiv.style.cursor = 'pointer';
+    controlDiv.style.textAlign = 'center';
+    controlDiv.style.padding = '1px';
+
+    // Set CSS for the control interior
+    var setShowText = document.createElement('b');
+    setShowText.style.fontFamily = 'Arial,sans-serif';
+    setShowText.style.fontSize = '12px';
+    setShowText.style.paddingLeft = '4px';
+    setShowText.style.paddingRight = '4px';
+    setShowText.innerHTML = 'Speed:';
+        
+    // Create an input field
+    var controlInput = document.createElement('input');
+    controlInput.id = "speed-control";
+    controlInput.name = "speed-control";
+    controlInput.value = "1";
+    controlInput.size = 3;
+   
+    // Create a button to send the information
+    var setButton = document.createElement('b');
+    setButton.style.fontFamily = 'Arial,sans-serif';
+    setButton.style.fontSize = '12px';
+    setButton.style.paddingLeft = '4px';
+    setButton.style.paddingRight = '4px';
+    setButton.style.cursor = 'pointer';
+    setButton.innerHTML = 'Set';
+
+    // Append everything to the wrapper div
+    controlDiv.appendChild(setShowText);
+    controlDiv.appendChild(controlInput);
+    controlDiv.appendChild(setButton);
+    
+    var onClick = function() {
+        
+        var speed = $("#speed-control").val();
+
+        if (isNumber(speed)){
+            speedFactor = speed;
+        };
+    };
+    google.maps.event.addDomListener(setButton, 'click', onClick);
+    controlDiv.index = 7
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(controlDiv);
+    
+    
+    
     
     // Create the selection box rectangle with listener for bounds change
     // Draw and set the rectangle 
@@ -766,12 +874,14 @@ $(function(){
         if ((realTime - timeOffset) > (lastTime + 120) && lastTime!==-1e12){
             timeOffset = realTime - firstTime;
             runReal = false;
+            
         };
         
         // Pause at end of file
         if ((realTime - timeOffset) > (lastTime) && lastTime!==-1e12 && !runPause){
             pauseSet = true;
             timeOffset = timeOffset + 1;
+            speedFactor = 1;
         };
   
         // Force timeOffset to stay below timeOffsetMin
@@ -779,6 +889,15 @@ $(function(){
             timeOffset = timeOffsetMin;
         };
 
+        // Return to the start of the file
+        if (runStart){
+            timeOffset = realTime - firstTime;
+            runReal = false;
+            runPause = false;
+            runStart = false;
+            speedFactor = 1;
+        };
+        
         // Increase playback speed by speedFactor
         timeOffset = timeOffset -  ajaxObj.delay * (speedFactor  - 1) / 1000;
         
@@ -894,14 +1013,17 @@ $(function(){
             lastGet = realTime
         };
         
-        strokePoints = [];
+        if (getStrokePoints){
+            strokePoints = [];
+        };
         
         $.each(locations, function(key, loc) {
        
-            
-            // Add strokes to strokePoint array
-            var stroke = new google.maps.LatLng(locations[key].lat,locations[key].long)
-            strokePoints.push(stroke)
+            if (getStrokePoints){
+                // Add strokes to strokePoint array
+                var stroke = new google.maps.LatLng(locations[key].lat,locations[key].long)
+                strokePoints.push(stroke)
+            };
             
             // Only create a marker for the current time window
             if(locations[key].marker == undefined && loc.mag > 0){
@@ -966,6 +1088,26 @@ $(function(){
             
 		});
 
+        
+        // Create and set heatmap / stroke density
+        
+        if (getStrokePoints){
+            
+            var pointArray = new google.maps.MVCArray(strokePoints);
+            heatmap = new google.maps.visualization.HeatmapLayer({
+                data: pointArray
+            });
+        
+            heatmap.setOptions({
+                gradient : gradient
+            });
+                        
+            heatmap.setMap(map);
+            getStrokePoints = false;
+        }
+        
+        ajaxObj.errorCount = 0;
+        
 	}
 
 	var ajaxObj = {//Object to save cluttering the namespace.
@@ -975,7 +1117,7 @@ $(function(){
 		},
 		delay: 100,//(milliseconds) the interval between loops
 		errorCount: 0,//running total of ajax errors.
-		errorThreshold: 5,//the number of ajax errors beyond which the get cycle should cease.
+		errorThreshold: 10,//the number of ajax errors beyond which the get cycle should cease.
 		ticker: null,//setTimeout reference - allows the get cycle to be cancelled with clearTimeout(ajaxObj.ticker);
 		get: function() { //a function which initiates 
 			if(ajaxObj.errorCount < ajaxObj.errorThreshold) {
@@ -983,7 +1125,7 @@ $(function(){
 			}
 		},
 		fail: function(jqXHR, textStatus, errorThrown) {
-			console.log(errorThrown);
+			console.log('Error Count: ' + ajaxObj.errorCount + ', ' + errorThrown);
 			ajaxObj.errorCount++;
 		}
 	};
