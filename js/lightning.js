@@ -238,9 +238,47 @@ $(function(){
     
     function loc2json(locFile){
         
-        var jsonFile
-      
-        jsonFile = locFile;
+        locFile = locFile.split("\n");
+        console.log(locFile)
+
+        var jsonFile = "{";
+        
+        for(var i = 1; i<locFile.length -1; i++) {
+            
+            var stroke = locFile[i].split(',');
+            
+            var strokeJSON = "";
+            
+            console.log(stroke)
+            
+            var strokeDate = stroke[0].split('/');
+            var strokeTime = stroke[1].split(':');
+            
+            var d = new Date(Date.UTC(strokeDate[0], strokeDate[1], strokeDate[2],
+                                      strokeTime[0], strokeTime[1], strokeTime[2]));
+            var strokeUnixTime = Math.round(d.getTime() / 1000);
+            
+            var strokeID = Math.random() * Math.pow(10,7);
+            strokeID= Math.round(strokeID);
+            var strokeUnixTime = stroke[0] + stroke[1]
+            var strokeLat = stroke[2];
+            var strokeLong = stroke[3];
+
+            strokeJSON += '"' + strokeID + '" : {';
+            strokeJSON += '"unixTime" : "' + strokeUnixTime + ', ';
+            strokeJSON += '"lat" : "' + strokeLat + ', ';
+            strokeJSON += '"long" : "' + strokeLong + '},';
+            
+            jsonFile += strokeJSON;
+            
+            console.log(strokeJSON);
+            
+        }
+        jsonFile = jsonFile.slice(0, -1);
+        jsonFile =+ "}";
+        
+        console.log(jsonFile)
+
         
         return jsonFile
     };
@@ -612,10 +650,9 @@ $(function(){
                     console.log(fileType);
                                 
                     if (fileType == "loc"){
-                        
-                        console.log(JsonObj);
+
                         JsonObj = loc2json(JsonObj);
-                        console.log(JsonObj);
+
                     }
                     
                     loadFile = $.parseJSON(JsonObj);
