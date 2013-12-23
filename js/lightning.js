@@ -17,7 +17,8 @@ $(function(){
     var getDelay = 1; // interval between server fetches (s)
     var densityRadius = 25; // Radius of the heatmap (pixels)
     var gradient = ['rgba(254,229,217,0)','rgba(254,229,217,1)', 'rgba(252,187,161,1)', 'rgba(252,146,114,1)', 'rgba(251,106,74,1)', 'rgba(222,45,38,1)', 'rgba(165,15,21,1)']; // Set Color Gradient for density
-
+    var maxFileSize = 50000; // Forced maximum size for loading .loc files
+    
     // Initial states and values for the buttons
     var runPause = false; // flag to pause playback
     var runPlay = false; // flag to resume playback
@@ -240,9 +241,18 @@ $(function(){
         
         locFile = locFile.split("\n");
 
+        var loadLength = locFile.length - 1;
+
+        if (loadLength > maxFileSize){
+            alert("File too large for playing (" + loadLength + " strokes), file must be less than " + maxFileSize + " strokes. Loading first " + maxFileSize + " strokes only.")
+            loadLength = maxFileSize;
+        };
+                  
+        
         var jsonFile = "{";
         
-        for(var i = 0; i < locFile.length - 1; i++) {
+        
+        for(var i = 0; i < loadLength; i++) {
             
             var stroke = locFile[i].split(',');
             
@@ -639,9 +649,10 @@ $(function(){
         //Retrieve the first (and only!) File from the FileList object
         var files = evt.target.files; 
     
-        if (files){
+        var f = files[0];
         
-            var f = files[0];
+        if (f){
+        
             var reader = new FileReader();
             
             var fileType = f.name.split('.');
@@ -677,7 +688,7 @@ $(function(){
             reader.readAsText(f, 'UTF-8');
                                                     
         } else { 
-          alert("Failed to load file");
+          alert("Failed to load file.");
             loadLocal = false;
         }
     }
