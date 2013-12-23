@@ -257,7 +257,7 @@ $(function(){
             var strokeDate = stroke[0].split('/');
             var strokeTime = stroke[1].split(':');
             
-            var d = new Date(Date.UTC(strokeDate[0], strokeDate[1], strokeDate[2],
+            var d = new Date(Date.UTC(strokeDate[0], strokeDate[1] - 1, strokeDate[2],
                                       strokeTime[0], strokeTime[1], Math.round(strokeTime[2]),
                                       1000*(strokeTime[2])%1));
             var strokeUnixTime = d.getTime() / 1000.0;
