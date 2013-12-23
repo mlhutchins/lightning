@@ -547,7 +547,12 @@ $(function(){
     // Reset to default input file
     var resetClick = function() {
         
+        // Clear previous stroke data
+        clearStrokes();
+        
         loadLocal = false;
+        lastTime = -1e12;
+        firstTime = 1e12;
         removeMarkers = true;
         runReal = true;
         ajaxObj.options.url = defaultFile;
@@ -564,6 +569,7 @@ $(function(){
     
         if (files){
         
+
             var f = files[0];
             var reader = new FileReader();
         
@@ -572,17 +578,21 @@ $(function(){
                 return function (e) { 
                     JsonObj = e.target.result
                     loadFile = $.parseJSON(JsonObj);
-
+                    
+                    // Clear previous stroke data
+                    clearStrokes();
+                    
+                    firstTime = 1e12;
+                    lastTime = -1e12;
+                    loadLocal = true;
+                    runReal = true;
+                                
                 };
             })(f);
-        
+                    
            //  Read in JSON as a data URL.
             reader.readAsText(f, 'UTF-8');
                                         
-            loadLocal = true;
-            auto_remove = true;
-            removeMarkers = true;
-                        
             // files is a FileList of File objects. List some properties.
             var output = [];
             for (var i = 0, f; f = files[i]; i++) {
@@ -592,7 +602,7 @@ $(function(){
                           '</li>');
             }
             document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
-            console.log('Finished')
+            
         } else { 
           alert("Failed to load file");
             loadLocal = false;
@@ -632,6 +642,7 @@ $(function(){
         return lat >= sw.lat() && lat <= ne.lat() && lng >= sw.lng() && lng <= ne.lng();
     };
     
+          
 
     
     /*
