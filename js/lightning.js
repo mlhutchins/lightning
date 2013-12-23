@@ -573,16 +573,19 @@ $(function(){
             runReal = false;
             runPlay = false;
             pauseSet = false;
+            console.log('Pausing playback.')
         };
         if (runReal){
             timeOffset = timeOffsetMin;
             runPlay = false;
             runPause = false;
             speedFactor = 1;
+            console.log('Returning to real time playback.')
         }
         if (runPlay){
             runReal = false;
             runPause = false;
+            console.log('Resuming playback.')
         }
         if (runPause){
             timeOffset = realTime - pauseTime;
@@ -599,6 +602,8 @@ $(function(){
                 pauseTime = lastTime;
             };
             runForward = false;
+            console.log('Moving forwards 30 seconds.')
+
         } else if (runBackward){
             timeOffset = timeOffset + 30;
             pauseTime = pauseTime - 30;
@@ -609,6 +614,7 @@ $(function(){
                 pauseTime = firstTime;
             };
             runBackward = false;
+            console.log('Moving backwards 30 seconds.')
         };
         
 
@@ -616,7 +622,7 @@ $(function(){
         if ((realTime - timeOffset) > (lastTime + 120) && lastTime!==-1e12){
             timeOffset = realTime - firstTime;
             runReal = false;
-            
+            console.log('End of data file: Restarting playback')
         };
         
         // Pause at end of file
@@ -624,11 +630,13 @@ $(function(){
             pauseSet = true;
             timeOffset = timeOffset + 1;
             speedFactor = 1;
+            console.log('End of data file: Pausing')
         };
   
         // Force timeOffset to stay below timeOffsetMin
         if (timeOffset < timeOffsetMin){
             timeOffset = timeOffsetMin;
+            console.log('Cannot exceed ' + timeOffsetMin + ' seconds of current time.')
         };
 
         // Return to the start of the file
@@ -638,6 +646,7 @@ $(function(){
             runPause = false;
             runStart = false;
             speedFactor = 1;
+            console.log('Moving to start of the data file.')
         };
         
         // Increase playback speed by speedFactor
