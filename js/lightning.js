@@ -580,11 +580,13 @@ $(function(){
             runPlay = false;
             runPause = false;
             speedFactor = 1;
+            runReal = false;
             console.log('Returning to real time playback.')
         }
         if (runPlay){
             runReal = false;
             runPause = false;
+            runPlay = false;
             console.log('Resuming playback.')
         }
         if (runPause){
