@@ -1,5 +1,8 @@
 $(function(){
 
+    // Data file location
+    var dataFile = 'data/current.json';
+    
     // Initialize storage array for stroke data
     var locations = {};//A repository for markers (and the data from which they were contructed).
 
@@ -837,7 +840,7 @@ $(function(){
 
 	var ajaxObj = {//Object to save cluttering the namespace.
 		options: {
-			url: "data/current.json",//The resource that delivers loc data.
+			url: dataFile,//The resource that delivers loc data.
 			dataType: "json"//The type of data tp be returned by the server.
 		},
 		delay: 100,//(milliseconds) the interval between loops
