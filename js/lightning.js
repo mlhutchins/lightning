@@ -89,7 +89,6 @@ $(function(){
 
     map.setOptions({styles:styles});
 
-    
     // Initialize day/night terminator
     window.dno = new DayNightOverlay({
                     map: map,
@@ -508,6 +507,70 @@ $(function(){
     google.maps.event.addDomListener(setButton, 'click', onClick);
     controlDiv.index = 7
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(controlDiv);
+    
+    
+    // File Upload
+    
+    // Create a div to hold everything else
+    var controlDiv = document.createElement('DIV');
+    controlDiv.id = "controls";
+    controlDiv.style.backgroundColor = 'white';
+    controlDiv.style.borderStyle = 'solid';
+    controlDiv.style.borderWidth = '1px';
+    controlDiv.style.cursor = 'pointer';
+    controlDiv.style.textAlign = 'center';
+    controlDiv.style.padding = '1px';
+        
+    // Create an input field
+    var fileInput = document.createElement('input');
+    fileInput.type = "file";
+    fileInput.id = "files";
+    fileInput.name = "files";
+    fileInput.size = 3;
+   
+    // Create a button to send the information
+    var resetButton = document.createElement('b');
+    resetButton.style.fontFamily = 'Arial,sans-serif';
+    resetButton.style.fontSize = '12px';
+    resetButton.style.paddingLeft = '4px';
+    resetButton.style.paddingRight = '4px';
+    resetButton.style.cursor = 'pointer';
+    resetButton.innerHTML = 'Reset';
+
+    // Append everything to the wrapper div
+    controlDiv.appendChild(fileInput);
+    controlDiv.appendChild(resetButton);
+    
+    var onClick = function() {
+        
+        console.log('reset')
+    };
+    
+    var importData = function(evt) {
+        //Retrieve the first (and only!) File from the FileList object
+        var files = evt.target.files; 
+    
+        if (files) {
+            // files is a FileList of File objects. List some properties.
+            var output = [];
+            for (var i = 0, f; f = files[i]; i++) {
+              output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                          f.size, ' bytes, last modified: ',
+                          f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                          '</li>');
+            }
+            document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+            console.log('Finished')
+        } else { 
+          alert("Failed to load file");
+        }
+      }
+
+    google.maps.event.addDomListener(fileInput, 'change', importData, false);
+    google.maps.event.addDomListener(resetButton, 'click', onClick);
+    controlDiv.index = 1
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
+
     
     
     // Create the selection box rectable
