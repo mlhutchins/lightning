@@ -17,6 +17,8 @@ data = [];
 oldTime = datevec(now + 8/24 - delay/86400);
 oldTime(6) = 0;
 
+errorIndex = 0;
+
 while true
 	
 	javaUTC = java.lang.System.currentTimeMillis;
@@ -30,20 +32,33 @@ while true
 		bFile = sprintf('%sB%04g%02g%02g%02g%02g.loc',...
 			bPath,newTime(1:5));
 		
-		newData = a_import(bFile);
+		try
+			newData = a_import(bFile);
 		
-		newData(:,11) = 1e7 * rand(size(newData,1),1);
+			newData(:,11) = 1e7 * rand(size(newData,1),1);
 
-		data = [data;newData];
-		
-		if size(data,1) > maxStrokes + 1
-			data = data(end - maxStrokes : end,:);
+			data = [data;newData];
+
+			if size(data,1) > maxStrokes + 1
+				data = data(end - maxStrokes : end,:);
+			end
+
+			loc2json(data(:,1:end-1),data(:,end),jsonFile);
+
+			errorIndex = 0;
+			
+		catch
+			
+			fprintf('File %s Load Failed\n',bFile);
+			
+			errorIndex = errorIndex + 1;
+			
 		end
-		
-		loc2json(data(:,1:end-1),data(:,end),jsonFile);
-		
-		oldTime = newTime;
-		
+			
+		if errorIndex == 0 || errorIndex > 4;
+			oldTime = newTime;
+		end
+
 	end
 	
 	pause(15);
