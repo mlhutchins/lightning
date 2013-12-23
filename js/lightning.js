@@ -239,7 +239,6 @@ $(function(){
     function loc2json(locFile){
         
         locFile = locFile.split("\n");
-        console.log(locFile)
 
         var jsonFile = "{";
         
@@ -277,10 +276,7 @@ $(function(){
         
         jsonFile = jsonFile.slice(0, -2);
         jsonFile += "}";
-        
-        console.log(jsonFile)
-
-        
+                
         return jsonFile
     };
     
@@ -645,11 +641,8 @@ $(function(){
             reader.onload = (function (theFile) {
                 return function (e) { 
                     
-
                     JsonObj = e.target.result
-                    
-                    console.log(fileType);
-                                
+            
                     if (fileType == "loc"){
 
                         JsonObj = loc2json(JsonObj);
