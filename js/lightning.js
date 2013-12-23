@@ -1,7 +1,8 @@
 $(function(){
 
     // Data file location
-    var dataFile = 'data/current.json';
+    var defaultFile = 'data/current.json';
+    var dataFile = defaultFile;
     
     // Initialize storage array for stroke data
     var locations = {};//A repository for markers (and the data from which they were contructed).
@@ -34,6 +35,8 @@ $(function(){
     var removeMarkers = false; // Set removal of all markers to false
     var getStrokePoints = false; // Start off not accumulating strokes into a heatmap
     var runStart = false; // Return to start variable
+    var loadLocal = false;
+    var loadFile = [];
     
     // Internal storage
     var currentStrokes = 0; // Index of total strokes displayed
@@ -541,16 +544,45 @@ $(function(){
     controlDiv.appendChild(fileInput);
     controlDiv.appendChild(resetButton);
     
+    // Reset to default input file
     var resetClick = function() {
         
-        console.log('reset')
+        loadLocal = false;
+        removeMarkers = true;
+        runReal = true;
+        ajaxObj.options.url = defaultFile;
+        console.log('Reset to default file:' + defaultFile)
+        
     };
+    
+    var JsonObj = null;
+    var newJSON = null;
     
     var importData = function(evt) {
         //Retrieve the first (and only!) File from the FileList object
         var files = evt.target.files; 
     
-        if (files) {
+        if (files){
+        
+            var f = files[0];
+            var reader = new FileReader();
+        
+            // Closure to capture the file information.
+            reader.onload = (function (theFile) {
+                return function (e) { 
+                    JsonObj = e.target.result
+                    loadFile = $.parseJSON(JsonObj);
+
+                };
+            })(f);
+        
+           //  Read in JSON as a data URL.
+            reader.readAsText(f, 'UTF-8');
+                                        
+            loadLocal = true;
+            auto_remove = true;
+            removeMarkers = true;
+                        
             // files is a FileList of File objects. List some properties.
             var output = [];
             for (var i = 0, f; f = files[i]; i++) {
@@ -563,8 +595,9 @@ $(function(){
             console.log('Finished')
         } else { 
           alert("Failed to load file");
+            loadLocal = false;
         }
-      }
+    }
 
     google.maps.event.addDomListener(fileInput, 'change', importData, false);
     google.maps.event.addDomListener(resetButton, 'click', resetClick);
@@ -608,6 +641,10 @@ $(function(){
     // Function to set and update markers, called through AJAX
 	function setMarkers(locObj) {
 
+        if (loadLocal) {
+            locObj = loadFile;
+        };
+        
         // Get current time
         var realTime = (new Date()).getTime()/1000;
 
