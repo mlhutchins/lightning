@@ -217,6 +217,21 @@ $(function(){
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
     
+    // function to remove all stroke data
+    function clearStrokes(){
+
+        //Remove markers for all unreported locs, and the corrsponding locations entry.
+        $.each(locations, function(key) {
+            if(locations[key].marker) {
+                locations[key].marker.setMap(null);
+            }
+            delete locations[key];
+        });
+        auto_remove = false;
+        runReal = false
+        firstTime = 1e12;
+    }
+        
     
     // General function for making on screen buttons
     function button(buttonOptions, buttonAction) {
@@ -669,21 +684,13 @@ $(function(){
                 firstInfo.innerHTML = 'Earliest Time Available: ' + firstUTC;
             };
         };
-                
-        // Remove strokes if clear button pressed, and reset pause timing
-		if(auto_remove) {
-			//Remove markers for all unreported locs, and the corrsponding locations entry.
-			$.each(locations, function(key) {
-                if(locations[key].marker) {
-                    locations[key].marker.setMap(null);
-                }
-                delete locations[key];
-			});
-            auto_remove = false;
-            runReal = false
-            firstTime = 1e12;
-		}
 
+        // Remove strokes if clear button pressed, and reset pause timing
+        if(auto_remove) {
+            clearStrokes();
+        };
+
+    
         // Remove markers if removeMarkers triggered
 		if(removeMarkers) {
 			//Remove markers for all unreported locs, and the corrsponding locations entry.
