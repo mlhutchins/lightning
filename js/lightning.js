@@ -541,7 +541,7 @@ $(function(){
     controlDiv.appendChild(fileInput);
     controlDiv.appendChild(resetButton);
     
-    var onClick = function() {
+    var resetClick = function() {
         
         console.log('reset')
     };
@@ -567,7 +567,7 @@ $(function(){
       }
 
     google.maps.event.addDomListener(fileInput, 'change', importData, false);
-    google.maps.event.addDomListener(resetButton, 'click', onClick);
+    google.maps.event.addDomListener(resetButton, 'click', resetClick);
     controlDiv.index = 1
     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
 
