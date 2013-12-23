@@ -258,8 +258,9 @@ $(function(){
             var strokeTime = stroke[1].split(':');
             
             var d = new Date(Date.UTC(strokeDate[0], strokeDate[1], strokeDate[2],
-                                      strokeTime[0], strokeTime[1], strokeTime[2]));
-            var strokeUnixTime = Math.round(d.getTime() / 1000);
+                                      strokeTime[0], strokeTime[1], Math.round(strokeTime[2]),
+                                      1000*(strokeTime[2])%1));
+            var strokeUnixTime = d.getTime() / 1000.0;
             
             // Get lat/long
             var strokeLat = stroke[2];
@@ -267,8 +268,8 @@ $(function(){
 
             strokeJSON += '"' + strokeID + '" : {';
             strokeJSON += '"unixTime" : ' + strokeUnixTime + ', ';
-            strokeJSON += '"lat" : "' + strokeLat + '", ';
-            strokeJSON += '"long" : "' + strokeLong + '"}, ';
+            strokeJSON += '"lat" : ' + parseFloat(strokeLat) + ', ';
+            strokeJSON += '"long" : ' + parseFloat(strokeLong) + '}, ';
             
             jsonFile += strokeJSON;
                         
