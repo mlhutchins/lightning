@@ -234,6 +234,17 @@ $(function(){
         firstTime = 1e12;
     }
         
+    // WWLLN .loc to JSOn format converter
+    
+    function loc2json(locFile){
+        
+        var jsonFile
+      
+        jsonFile = locFile;
+        
+        return jsonFile
+    };
+    
     
     // General function for making on screen buttons
     function button(buttonOptions, buttonAction) {
@@ -527,6 +538,8 @@ $(function(){
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(controlDiv);
     
     
+    
+    
     // File Upload
     
     // Create a div to hold everything else
@@ -576,7 +589,6 @@ $(function(){
     };
     
     var JsonObj = null;
-    var newJSON = null;
     
     var importData = function(evt) {
         //Retrieve the first (and only!) File from the FileList object
@@ -584,14 +596,28 @@ $(function(){
     
         if (files){
         
-
             var f = files[0];
             var reader = new FileReader();
-        
+            
+            var fileType = f.name.split('.');
+            fileType = fileType[fileType.length - 1];
+
             // Closure to capture the file information.
             reader.onload = (function (theFile) {
                 return function (e) { 
+                    
+
                     JsonObj = e.target.result
+                    
+                    console.log(fileType);
+                                
+                    if (fileType == "loc"){
+                        
+                        console.log(JsonObj);
+                        JsonObj = loc2json(JsonObj);
+                        console.log(JsonObj);
+                    }
+                    
                     loadFile = $.parseJSON(JsonObj);
                     
                     // Clear previous stroke data
