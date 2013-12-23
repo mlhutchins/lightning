@@ -648,9 +648,7 @@ $(function(){
                         JsonObj = loc2json(JsonObj);
 
                     }
-                    
-                    loadFile = $.parseJSON(JsonObj);
-                    
+                                        
                     // Clear previous stroke data
                     clearStrokes();
                     
@@ -658,10 +656,13 @@ $(function(){
                     lastTime = -1e12;
                     loadLocal = true;
                     runReal = true;
+                    
+                    loadFile = $.parseJSON(JsonObj);
+
                                 
                 };
             })(f);
-                    
+            
            //  Read in JSON as a data URL.
             reader.readAsText(f, 'UTF-8');
                                                     
