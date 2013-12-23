@@ -23,7 +23,7 @@ while true
 	
 	javaUTC = java.lang.System.currentTimeMillis;
 	
-	utcTime = [1970, 1, 1, 0, 0, javaUTC/1000 - delay/86400];
+	utcTime = [1970, 1, 1, 0, 0, javaUTC/1000 - delay];
 	newTime = datevec(datenum(utcTime));
 	newTime(6) = 0;
 	
