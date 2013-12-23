@@ -19,7 +19,10 @@ oldTime(6) = 0;
 
 while true
 	
-	newTime = datevec(now + 8/24 - delay/86400);
+	javaUTC = java.lang.System.currentTimeMillis;
+	
+	utcTime = [1970, 1, 1, 0, 0, javaUTC/1000 - delay/86400];
+	newTime = datevec(datenum(utcTime));
 	newTime(6) = 0;
 	
 	if datenum(oldTime) < datenum(newTime)
