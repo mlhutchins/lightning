@@ -243,14 +243,17 @@ $(function(){
 
         var jsonFile = "{";
         
-        for(var i = 1; i<locFile.length -1; i++) {
+        for(var i = 0; i < locFile.length - 1; i++) {
             
             var stroke = locFile[i].split(',');
             
             var strokeJSON = "";
+                        
+            // Set random stroke ID
+            var strokeID = Math.random() * Math.pow(10,7);
+            strokeID= Math.round(strokeID);  
             
-            console.log(stroke)
-            
+            // Get unixTime
             var strokeDate = stroke[0].split('/');
             var strokeTime = stroke[1].split(':');
             
@@ -258,24 +261,21 @@ $(function(){
                                       strokeTime[0], strokeTime[1], strokeTime[2]));
             var strokeUnixTime = Math.round(d.getTime() / 1000);
             
-            var strokeID = Math.random() * Math.pow(10,7);
-            strokeID= Math.round(strokeID);
-            var strokeUnixTime = stroke[0] + stroke[1]
+            // Get lat/long
             var strokeLat = stroke[2];
             var strokeLong = stroke[3];
 
             strokeJSON += '"' + strokeID + '" : {';
-            strokeJSON += '"unixTime" : "' + strokeUnixTime + ', ';
-            strokeJSON += '"lat" : "' + strokeLat + ', ';
-            strokeJSON += '"long" : "' + strokeLong + '},';
+            strokeJSON += '"unixTime" : ' + strokeUnixTime + ', ';
+            strokeJSON += '"lat" : "' + strokeLat + '", ';
+            strokeJSON += '"long" : "' + strokeLong + '"}, ';
             
             jsonFile += strokeJSON;
-            
-            console.log(strokeJSON);
-            
+                        
         }
-        jsonFile = jsonFile.slice(0, -1);
-        jsonFile =+ "}";
+        
+        jsonFile = jsonFile.slice(0, -2);
+        jsonFile += "}";
         
         console.log(jsonFile)
 
