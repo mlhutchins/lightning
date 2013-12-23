@@ -384,11 +384,21 @@ $(function(){
     };
     
     function dataClearAction() { 
-        auto_remove = true;
+        clearStrokes();
         removeMarkers = true;
-        heatmap.setMap(null);
-        showAll = false;
+        if (heatmap!==undefined){
+            heatmap.setMap(null);
+            showAll = false;
+        }
         runPlay = true;
+        
+        loadLocal = false;
+        lastTime = -1e12;
+        firstTime = 1e12;
+        
+        ajaxObj.options.url = defaultFile;
+        console.log('Reset to default file:' + defaultFile)
+        
     };
          
     button(dataClearOptions, dataClearAction);
