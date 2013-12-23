@@ -720,10 +720,6 @@ $(function(){
 
     // Function to set and update markers, called through AJAX
 	function setMarkers(locObj) {
-
-        if (loadLocal) {
-            locObj = loadFile;
-        };
         
         // Get current time
         var realTime = (new Date()).getTime()/1000;
@@ -1041,10 +1037,16 @@ $(function(){
 	
 	//Ajax master routine
 	function getMarkerData() {
-		$.ajax(ajaxObj.options)
-		  .done(setMarkers) //fires when ajax returns successfully
-		  .fail(ajaxObj.fail) //fires when an ajax error occurs
-		  .always(ajaxObj.get); //fires after ajax success or ajax error
+        
+        if (loadLocal){
+            setMarkers(loadFile);
+            setTimeout(getMarkerData, ajaxObj.delay);
+        } else {
+            $.ajax(ajaxObj.options)
+              .done(setMarkers) //fires when ajax returns successfully
+              .fail(ajaxObj.fail) //fires when an ajax error occurs
+              .always(ajaxObj.get); //fires after ajax success or ajax error
+        }
 	}
 
 	ajaxObj.get();//Start the get cycle.
