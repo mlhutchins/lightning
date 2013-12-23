@@ -1,7 +1,8 @@
 $(function(){
 
     // Data file location
-    var dataFile = 'data/current.json';
+    var defaultFile = 'data/current.json';
+    var dataFile = defaultFile;
     
     // Initialize storage array for stroke data
     var locations = {};//A repository for markers (and the data from which they were contructed).
@@ -34,6 +35,8 @@ $(function(){
     var removeMarkers = false; // Set removal of all markers to false
     var getStrokePoints = false; // Start off not accumulating strokes into a heatmap
     var runStart = false; // Return to start variable
+    var loadLocal = false;
+    var loadFile = [];
     
     // Internal storage
     var currentStrokes = 0; // Index of total strokes displayed
@@ -89,7 +92,6 @@ $(function(){
 
     map.setOptions({styles:styles});
 
-    
     // Initialize day/night terminator
     window.dno = new DayNightOverlay({
                     map: map,
@@ -232,6 +234,52 @@ $(function(){
         firstTime = 1e12;
     }
         
+    // WWLLN .loc to JSOn format converter
+    
+    function loc2json(locFile){
+        
+        locFile = locFile.split("\n");
+
+        var jsonFile = "{";
+        
+        for(var i = 0; i < locFile.length - 1; i++) {
+            
+            var stroke = locFile[i].split(',');
+            
+            var strokeJSON = "";
+                        
+            // Set random stroke ID
+            var strokeID = Math.random() * Math.pow(10,7);
+            strokeID= Math.round(strokeID);  
+            
+            // Get unixTime
+            var strokeDate = stroke[0].split('/');
+            var strokeTime = stroke[1].split(':');
+            
+            var d = new Date(Date.UTC(strokeDate[0], strokeDate[1] - 1, strokeDate[2],
+                                      strokeTime[0], strokeTime[1], Math.round(strokeTime[2]),
+                                      1000*(strokeTime[2])%1));
+            var strokeUnixTime = d.getTime() / 1000.0;
+            
+            // Get lat/long
+            var strokeLat = stroke[2];
+            var strokeLong = stroke[3];
+
+            strokeJSON += '"' + strokeID + '" : {';
+            strokeJSON += '"unixTime" : ' + strokeUnixTime + ', ';
+            strokeJSON += '"lat" : ' + parseFloat(strokeLat) + ', ';
+            strokeJSON += '"long" : ' + parseFloat(strokeLong) + '}, ';
+            
+            jsonFile += strokeJSON;
+                        
+        }
+        
+        jsonFile = jsonFile.slice(0, -2);
+        jsonFile += "}";
+                
+        return jsonFile
+    };
+    
     
     // General function for making on screen buttons
     function button(buttonOptions, buttonAction) {
@@ -525,6 +573,112 @@ $(function(){
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(controlDiv);
     
     
+    
+    
+    // File Upload
+    
+    // Create a div to hold everything else
+    var controlDiv = document.createElement('DIV');
+    controlDiv.id = "controls";
+    controlDiv.style.backgroundColor = 'white';
+    controlDiv.style.borderStyle = 'solid';
+    controlDiv.style.borderWidth = '1px';
+    controlDiv.style.cursor = 'pointer';
+    controlDiv.style.textAlign = 'center';
+    controlDiv.style.padding = '1px';
+        
+    // Create an input field
+    var fileInput = document.createElement('input');
+    fileInput.type = "file";
+    fileInput.id = "files";
+    fileInput.name = "files";
+    fileInput.size = 3;
+   
+    // Create a button to send the information
+    var resetButton = document.createElement('b');
+    resetButton.style.fontFamily = 'Arial,sans-serif';
+    resetButton.style.fontSize = '12px';
+    resetButton.style.paddingLeft = '4px';
+    resetButton.style.paddingRight = '4px';
+    resetButton.style.cursor = 'pointer';
+    resetButton.innerHTML = 'Reset';
+
+    // Append everything to the wrapper div
+    controlDiv.appendChild(fileInput);
+    controlDiv.appendChild(resetButton);
+    
+    // Reset to default input file
+    var resetClick = function() {
+        
+        // Clear previous stroke data
+        clearStrokes();
+        
+        loadLocal = false;
+        lastTime = -1e12;
+        firstTime = 1e12;
+        removeMarkers = true;
+        runReal = true;
+        ajaxObj.options.url = defaultFile;
+        console.log('Reset to default file:' + defaultFile)
+        
+    };
+    
+    var JsonObj = null;
+    
+    var importData = function(evt) {
+        //Retrieve the first (and only!) File from the FileList object
+        var files = evt.target.files; 
+    
+        if (files){
+        
+            var f = files[0];
+            var reader = new FileReader();
+            
+            var fileType = f.name.split('.');
+            fileType = fileType[fileType.length - 1];
+
+            // Closure to capture the file information.
+            reader.onload = (function (theFile) {
+                return function (e) { 
+                    
+                    JsonObj = e.target.result
+            
+                    if (fileType == "loc"){
+
+                        JsonObj = loc2json(JsonObj);
+
+                    }
+                                        
+                    // Clear previous stroke data
+                    clearStrokes();
+                    
+                    firstTime = 1e12;
+                    lastTime = -1e12;
+                    loadLocal = true;
+                    runReal = true;
+                    
+                    loadFile = $.parseJSON(JsonObj);
+
+                                
+                };
+            })(f);
+            
+           //  Read in JSON as a data URL.
+            reader.readAsText(f, 'UTF-8');
+                                                    
+        } else { 
+          alert("Failed to load file");
+            loadLocal = false;
+        }
+    }
+
+    google.maps.event.addDomListener(fileInput, 'change', importData, false);
+    google.maps.event.addDomListener(resetButton, 'click', resetClick);
+    controlDiv.index = 1
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
+
+    
+    
     // Create the selection box rectable
     
     // Create the selection box rectangle with listener for bounds change
@@ -551,6 +705,7 @@ $(function(){
         return lat >= sw.lat() && lat <= ne.lat() && lng >= sw.lng() && lng <= ne.lng();
     };
     
+          
 
     
     /*
@@ -559,7 +714,7 @@ $(function(){
 
     // Function to set and update markers, called through AJAX
 	function setMarkers(locObj) {
-
+        
         // Get current time
         var realTime = (new Date()).getTime()/1000;
 
@@ -878,10 +1033,16 @@ $(function(){
 	
 	//Ajax master routine
 	function getMarkerData() {
-		$.ajax(ajaxObj.options)
-		  .done(setMarkers) //fires when ajax returns successfully
-		  .fail(ajaxObj.fail) //fires when an ajax error occurs
-		  .always(ajaxObj.get); //fires after ajax success or ajax error
+        
+        if (loadLocal){
+            setMarkers(loadFile);
+            setTimeout(getMarkerData, ajaxObj.delay);
+        } else {
+            $.ajax(ajaxObj.options)
+              .done(setMarkers) //fires when ajax returns successfully
+              .fail(ajaxObj.fail) //fires when an ajax error occurs
+              .always(ajaxObj.get); //fires after ajax success or ajax error
+        }
 	}
 
 	ajaxObj.get();//Start the get cycle.
