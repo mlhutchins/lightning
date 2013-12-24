@@ -30,10 +30,8 @@ $(function(){
     var firstTime = 1e12; // Initial first stroke time
     var lastTime = -1e12; // initial last stroke timed
     var speedFactor = 1; // Initial speed factor of 1
-    var auto_remove = false;//When true, markers for all unreported locs will be removed.
     var showBox = false; // Start with no subset box shown
     var showAll = false; // Don't show all loaded strokes on launch
-    var removeMarkers = false; // Set removal of all markers to false
     var getStrokePoints = false; // Start off not accumulating strokes into a heatmap
     var runStart = false; // Return to start variable
     var loadLocal = false;
@@ -220,19 +218,26 @@ $(function(){
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
     
-    // function to remove all stroke data
-    function clearStrokes(){
-
+    // function to clear all stroke markers
+    
+    function clearMarkers(){
         //Remove markers for all unreported locs, and the corrsponding locations entry.
         $.each(locations, function(key) {
             if(locations[key].marker) {
                 locations[key].marker.setMap(null);
             }
-            delete locations[key];
         });
-        auto_remove = false;
+    };
+    
+    // function to remove all stroke data
+    function clearStrokes(){
+
+        clearMarkers();
+        locations = {};
+        
         runReal = false
         firstTime = 1e12;
+        lastTime = -1e12;
     }
         
     // WWLLN .loc to JSOn format converter
@@ -395,16 +400,15 @@ $(function(){
     
     function dataClearAction() { 
         clearStrokes();
-        removeMarkers = true;
+
         if (heatmap!==undefined){
             heatmap.setMap(null);
             showAll = false;
         }
+        
         runPlay = true;
         
         loadLocal = false;
-        lastTime = -1e12;
-        firstTime = 1e12;
         
         ajaxObj.options.url = defaultFile;
         console.log('Reset to default file:' + defaultFile)
@@ -460,7 +464,7 @@ $(function(){
     
     function dataRealAction() { 
         runReal = true;
-        removeMarkers = true;
+        clearMarkers();
     };
          
     button(dataRealOptions, dataRealAction);
@@ -510,6 +514,7 @@ $(function(){
     };
     
     function dataStartAction() { 
+        clearMarkers();
         runStart = true;
     };
          
@@ -634,9 +639,6 @@ $(function(){
         clearStrokes();
         
         loadLocal = false;
-        lastTime = -1e12;
-        firstTime = 1e12;
-        removeMarkers = true;
         runReal = true;
         ajaxObj.options.url = defaultFile;
         console.log('Reset to default file:' + defaultFile)
@@ -680,9 +682,7 @@ $(function(){
                                         
                     // Clear previous stroke data
                     clearStrokes();
-                    
-                    firstTime = 1e12;
-                    lastTime = -1e12;
+
                     loadLocal = true;
                     runReal = true;
                     
@@ -880,23 +880,6 @@ $(function(){
             };
         };
 
-        // Remove strokes if clear button pressed, and reset pause timing
-        if(auto_remove) {
-            clearStrokes();
-        };
-
-    
-        // Remove markers if removeMarkers triggered
-		if(removeMarkers) {
-			//Remove markers for all unreported locs, and the corrsponding locations entry.
-			$.each(locations, function(key) {
-                if(locations[key].marker) {
-                    locations[key].marker.setMap(null);
-                }
-			});
-            removeMarkers = false;
-		}
-        
         // Only get new data if it has been at least getDelay since the last fetch
         if (realTime > (lastGet + getDelay)){
             $.each(locObj, function(key, loc) {
