@@ -646,6 +646,14 @@ $(function(){
     var JsonObj = null;
     
     var importData = function(evt) {
+        
+        // Check if file APIs are present
+        if (window.File && window.FileReader && window.FileList && window.Blob){
+            console.log('Begin File Load')
+        } else {
+                alert('The File Load APIs are not fully supported in this browser.')
+        };
+        
         //Retrieve the first (and only!) File from the FileList object
         var files = evt.target.files; 
     
@@ -679,7 +687,7 @@ $(function(){
                     runReal = true;
                     
                     loadFile = $.parseJSON(JsonObj);
-
+					console.log('Load Finished')
                                 
                 };
             })(f);
