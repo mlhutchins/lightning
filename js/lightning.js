@@ -295,6 +295,30 @@ $(function(){
         return jsonFile
     };
     
+               
+    // Make a heatmap from a set of points
+    function setDensityMap(){
+        
+        $.each(locations, function(key, loc) {
+       
+            // Add strokes to strokePoint array
+            var stroke = new google.maps.LatLng(locations[key].lat,locations[key].long)
+            strokePoints.push(stroke)
+            
+        });
+               
+        var pointArray = new google.maps.MVCArray(strokePoints);
+        heatmap = new google.maps.visualization.HeatmapLayer({
+            data: pointArray
+        });
+    
+        heatmap.setOptions({
+            gradient : gradient,
+            radius: densityRadius
+        });
+                    
+        heatmap.setMap(map);
+    }
     
     // General function for making on screen buttons
     function button(buttonOptions, buttonAction) {
@@ -380,9 +404,8 @@ $(function(){
             heatmap.setMap(null);
             showAll = false;
         } else {
-                    
             showAll = true;
-            getStrokePoints = true;
+            setDensityMap();
         };
     };
          
@@ -727,8 +750,6 @@ $(function(){
         var sw = rectangle.getBounds().getSouthWest();
         return lat >= sw.lat() && lat <= ne.lat() && lng >= sw.lng() && lng <= ne.lng();
     };
-    
-          
 
     
     /*
@@ -924,13 +945,7 @@ $(function(){
         };
         
         $.each(locations, function(key, loc) {
-       
-            if (getStrokePoints){
-                // Add strokes to strokePoint array
-                var stroke = new google.maps.LatLng(locations[key].lat,locations[key].long)
-                strokePoints.push(stroke)
-            };
-            
+                   
             // Only create a marker for the current time window
             if(locations[key].marker == undefined && loc.mag > 0){
              
@@ -993,25 +1008,6 @@ $(function(){
                         
             
 		});
-
-        
-        // Create and set heatmap / stroke density
-        
-        if (getStrokePoints){
-            
-            var pointArray = new google.maps.MVCArray(strokePoints);
-            heatmap = new google.maps.visualization.HeatmapLayer({
-                data: pointArray
-            });
-        
-            heatmap.setOptions({
-                gradient : gradient,
-                radius: densityRadius
-            });
-                        
-            heatmap.setMap(map);
-            getStrokePoints = false;
-        }
         
         ajaxObj.errorCount = 0;
         
