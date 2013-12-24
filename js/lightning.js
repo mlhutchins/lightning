@@ -406,7 +406,7 @@ $(function(){
             showAll = false;
         }
         
-        runPlay = true;
+        runReal = true;
         
         loadLocal = false;
         
@@ -632,19 +632,6 @@ $(function(){
     controlDiv.appendChild(fileInput);
     controlDiv.appendChild(resetButton);
     
-    // Reset to default input file
-    var resetClick = function() {
-        
-        // Clear previous stroke data
-        clearStrokes();
-        
-        loadLocal = false;
-        runReal = true;
-        ajaxObj.options.url = defaultFile;
-        console.log('Reset to default file:' + defaultFile)
-        
-    };
-    
     var JsonObj = null;
     
     var importData = function(evt) {
@@ -709,7 +696,7 @@ $(function(){
     }
 
     google.maps.event.addDomListener(fileInput, 'change', importData, false);
-    google.maps.event.addDomListener(resetButton, 'click', resetClick);
+    google.maps.event.addDomListener(resetButton, 'click', dataClearAction);
     controlDiv.index = 1
     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
 
