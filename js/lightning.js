@@ -692,6 +692,13 @@ $(function(){
                 };
             })(f);
             
+            // Additional clearing and resetting
+            
+            clearStrokes();
+
+            loadLocal = true;
+            runReal = true;
+                
            //  Read in JSON as a data URL.
             reader.readAsText(f, 'UTF-8');
                                                     
