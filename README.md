@@ -10,4 +10,12 @@ Users can also load their own WWLLN .loc files for playback and viewing.  There 
 
 The terminator code is taken from https://github.com/marmat/google-maps-api-addons.
 
+Login in controlled by the .htpasswd file specified in .htaccess.  An .htpasswd file is created with:
+
+htpasswd -c .htpasswd [new_user]
+
+And ammended with:
+
+htpasswd .htpasswd [new_user]
+
 For questions, concerns, or suggestions, contact Michael Hutchins: mlhutch @ uw.edu
