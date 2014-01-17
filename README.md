@@ -23,4 +23,12 @@ These can be generated from a WWLLN .loc data file using the loc2json.m function
 
 The terminator code is taken from https://github.com/marmat/google-maps-api-addons.
 
+Login in controlled by the .htpasswd file specified in .htaccess.  An .htpasswd file is created with:
+
+htpasswd -c .htpasswd [new_user]
+
+And ammended with:
+
+htpasswd .htpasswd [new_user]
+
 For questions, concerns, or suggestions, contact Michael Hutchins: mlhutch @ uw.edu

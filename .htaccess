@@ -1,0 +1,15 @@
+# Allow PHP in html files
+AddType application/x-httpd-php .html
+
+# Protect the htaccess file
+<Files .htaccess>
+Order Allow,Deny
+Deny from all
+</Files>
+
+AuthUserFile /Users/michael/Sites/lightning/.htpasswd
+AuthType Basic
+AuthName "Realtime WWLLN Map"
+Require valid-user
+
+Options -Indexes
