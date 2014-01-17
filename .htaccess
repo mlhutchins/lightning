@@ -7,9 +7,11 @@ Order Allow,Deny
 Deny from all
 </Files>
 
-AuthUserFile /Users/michael/Sites/lightning/.htpasswd
-AuthType Basic
-AuthName "Realtime WWLLN Map"
-Require valid-user
+## Uncomment out block below to password protect site with Apache htpasswd file
+#AuthUserFile /path/to/.htpasswd
+#AuthType Basic
+#AuthName "Realtime WWLLN Map Access"
+#AuthName "Contact Robert Holzworth (bobholz@washington.edu) for access"
+#Require valid-user
 
 Options -Indexes
