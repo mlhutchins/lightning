@@ -17,8 +17,8 @@ $(function(){
     var getDelay = 1; // interval between server fetches (s)
     var densityRadius = 25; // Radius of the heatmap (pixels)
     var gradient = ['rgba(254,229,217,0)','rgba(254,229,217,1)', 'rgba(252,187,161,1)', 'rgba(252,146,114,1)', 'rgba(251,106,74,1)', 'rgba(222,45,38,1)', 'rgba(165,15,21,1)']; // Set Color Gradient for density
-    var maxFileSize = 50000; // Forced maximum size for loading .loc files
-    
+    var maxFileSize = 6000; // Forced maximum size for loading .loc files
+
     // Initial states and values for the buttons
     var runPause = false; // flag to pause playback
     var runPlay = false; // flag to resume playback
@@ -947,7 +947,8 @@ $(function(){
         $.each(locations, function(key, loc) {
                  
             // Keep locations below maxFileSize by dropping oldest markers
-            if(locations.length > maxFileSize && locations[key].unixTime > (lastTime - 1)){
+            if(Object.keys(locations).length > maxFileSize && locations[key].unixTime > (lastTime - 1)){
+                
                 
 				//Remove marker from map
 				if(locations[key].marker) {
