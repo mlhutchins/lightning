@@ -945,7 +945,21 @@ $(function(){
         };
         
         $.each(locations, function(key, loc) {
+                 
+            // Keep locations below maxFileSize by dropping oldest markers
+            if(locations.length > maxFileSize && locations[key].unixTime > (lastTime - 1)){
+                
+				//Remove marker from map
+				if(locations[key].marker) {
+					locations[key].marker.setMap(null);
+					locations[key].marker = undefined
+				}
+                
+                delete locations[key];
                    
+            }
+            
+            
             // Only create a marker for the current time window
             if(locations[key].marker == undefined && loc.mag > 0){
              
