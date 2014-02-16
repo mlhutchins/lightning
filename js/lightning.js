@@ -17,7 +17,7 @@ $(function(){
     var getDelay = 1; // interval between server fetches (s)
     var densityRadius = 25; // Radius of the heatmap (pixels)
     var gradient = ['rgba(254,229,217,0)','rgba(254,229,217,1)', 'rgba(252,187,161,1)', 'rgba(252,146,114,1)', 'rgba(251,106,74,1)', 'rgba(222,45,38,1)', 'rgba(165,15,21,1)']; // Set Color Gradient for density
-    var maxFileSize = 6000; // Forced maximum size for loading .loc files
+    var maxFileSize = 25000; // Forced maximum size for loading .loc files
 
     // Initial states and values for the buttons
     var runPause = false; // flag to pause playback
@@ -36,7 +36,8 @@ $(function(){
     var runStart = false; // Return to start variable
     var loadLocal = false;
     var loadFile = [];
-    
+    var update_firstTime = false;
+ 
     // Internal storage
     var currentStrokes = 0; // Index of total strokes displayed
     var currentBoxStrokes = 0; // Index of strokes in box
@@ -943,24 +944,35 @@ $(function(){
         if (getStrokePoints){
             strokePoints = [];
         };
-        
+     
+		// If strokes were removed increment firstTime by 60 seconds 
+		if (update_firstTime){
+			firstTime = firstTime + 59;
+			update_firstTime = false;
+		} 
+ 
         $.each(locations, function(key, loc) {
-                 
+ 
             // Keep locations below maxFileSize by dropping oldest markers
-            if(Object.keys(locations).length > maxFileSize && locations[key].unixTime > (lastTime - 1)){
-                
+            if( strokeCount > maxFileSize && locations[key].unixTime < (firstTime + 60)){
                 
 				//Remove marker from map
-				if(locations[key].marker) {
+				if(locations[key].marker !== undefined) {
 					locations[key].marker.setMap(null);
 					locations[key].marker = undefined
 				}
                 
                 delete locations[key];
-                   
+
+				update_firstTime = true;
+                return; 
             }
-            
-            
+    
+			// Update first time to oldest stroke in record
+            if ( strokeCount < maxFileSize && firstTime > locations[key].unixTime) {
+                firstTime = locations[key].unixTime;
+             };
+        
             // Only create a marker for the current time window
             if(locations[key].marker == undefined && loc.mag > 0){
              
