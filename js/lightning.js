@@ -37,7 +37,8 @@ $(function(){
     var loadLocal = false;
     var loadFile = [];
     var update_firstTime = false;
- 
+    var updateCountDensity = 10;
+    
     // Internal storage
     var currentStrokes = 0; // Index of total strokes displayed
     var currentBoxStrokes = 0; // Index of strokes in box
@@ -404,8 +405,10 @@ $(function(){
         if (showAll){
             heatmap.setMap(null);
             showAll = false;
+            updateCountDensity = 10;
         } else {
             showAll = true;
+            updateCountDensity = 10;
             setDensityMap();
         };
     };
@@ -941,8 +944,10 @@ $(function(){
             lastGet = realTime
             
             // Update density map on each new fetch
-            if (showAll){
+            if (showAll && updateCountDensity == 0){
               setDensityMap();  
+            } else if (showAll && updateCountDensity != 0){
+              updateCountDensity--;   
             };
             
         };
