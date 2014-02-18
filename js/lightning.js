@@ -299,6 +299,9 @@ $(function(){
     // Make a heatmap from a set of points
     function setDensityMap(){
 
+        // Reset point array
+        pointArray = new google.maps.MVCArray([]);
+        
         $.each(locations, function(key, loc) {
        
             // Add strokes to pointArray array
