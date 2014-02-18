@@ -41,7 +41,7 @@ $(function(){
     var currentStrokes = 0; // Index of total strokes displayed
     var currentBoxStrokes = 0; // Index of strokes in box
     var lastGet = 0; // holds time of last server fetch
-    var strokePoints = []; // Array to hold stroke data
+    var pointArray = new google.maps.MVCArray([]);  // Array to hold stroke data
     var heatmap;
     
     // Cloud layer settings
@@ -301,13 +301,12 @@ $(function(){
 
         $.each(locations, function(key, loc) {
        
-            // Add strokes to strokePoint array
+            // Add strokes to pointArray array
             var stroke = new google.maps.LatLng(locations[key].lat,locations[key].long)
-            strokePoints.push(stroke)
+            pointArray.push(stroke)
             
         });
         
-        var pointArray = new google.maps.MVCArray(strokePoints);
         heatmap = new google.maps.visualization.HeatmapLayer({
             data: pointArray
         });
@@ -937,7 +936,7 @@ $(function(){
                     
                     // Update density map with latest point
                     
-                    if (showAll && pointArray!== undefined){
+                    if (showAll){
                         
                         var stroke = new google.maps.LatLng(loc.lat,loc.long)
                         pointArray.push(stroke)
