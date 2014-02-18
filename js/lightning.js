@@ -36,7 +36,6 @@ $(function(){
     var loadLocal = false;
     var loadFile = [];
     var update_firstTime = false;
-    var updateCountDensity = 10;
     
     // Internal storage
     var currentStrokes = 0; // Index of total strokes displayed
@@ -299,9 +298,7 @@ $(function(){
                
     // Make a heatmap from a set of points
     function setDensityMap(){
-        
-        strokePoints = [];
-        
+
         $.each(locations, function(key, loc) {
        
             // Add strokes to strokePoint array
@@ -309,15 +306,12 @@ $(function(){
             strokePoints.push(stroke)
             
         });
-               
-        heatmap.setMap(null);
-
         
         var pointArray = new google.maps.MVCArray(strokePoints);
         heatmap = new google.maps.visualization.HeatmapLayer({
             data: pointArray
         });
-    
+        
         heatmap.setOptions({
             gradient : gradient,
             radius: densityRadius
@@ -409,10 +403,8 @@ $(function(){
         if (showAll){
             heatmap.setMap(null);
             showAll = false;
-            updateCountDensity = 10;
         } else {
             showAll = true;
-            updateCountDensity = 10;
             setDensityMap();
         };
     };
@@ -941,19 +933,22 @@ $(function(){
     
                     //Remember loc in the `locations` so its info can be displayed and so its marker can be deleted.
                     locations[key] = loc;
+                    
+                    
+                    // Update density map with latest point
+                    
+                    if (showAll && point!== undefined){
+                        
+                        var stroke = new google.maps.LatLng(loc.lat,loc.long)
+                        pointArray.push(stroke)
+                        
+                    };
+                    
                 }
                 
             });
             
             lastGet = realTime
-            
-            // Update density map on each new fetch
-            if (showAll && updateCountDensity == 0){
-              setDensityMap(); 
-              updateCountDensity = 10;
-            } else if (showAll && updateCountDensity != 0){
-              updateCountDensity--;   
-            };
             
         };
     
