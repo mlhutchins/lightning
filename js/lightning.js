@@ -939,6 +939,12 @@ $(function(){
             });
             
             lastGet = realTime
+            
+            // Update density map on each new fetch
+            if (showAll){
+              setDensityMap();  
+            };
+            
         };
         
         if (getStrokePoints){
