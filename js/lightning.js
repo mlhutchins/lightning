@@ -310,6 +310,9 @@ $(function(){
             
         });
                
+        heatmap.setMap(null);
+
+        
         var pointArray = new google.maps.MVCArray(strokePoints);
         heatmap = new google.maps.visualization.HeatmapLayer({
             data: pointArray
@@ -320,7 +323,6 @@ $(function(){
             radius: densityRadius
         });
                     
-        heatmap.setMap(null);
         heatmap.setMap(map);
     }
     
