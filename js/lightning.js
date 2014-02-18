@@ -937,7 +937,7 @@ $(function(){
                     
                     // Update density map with latest point
                     
-                    if (showAll && point!== undefined){
+                    if (showAll && pointArray!== undefined){
                         
                         var stroke = new google.maps.LatLng(loc.lat,loc.long)
                         pointArray.push(stroke)
