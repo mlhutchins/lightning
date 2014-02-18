@@ -320,6 +320,7 @@ $(function(){
             radius: densityRadius
         });
                     
+        heatmap.setMap(null);
         heatmap.setMap(map);
     }
     
@@ -946,7 +947,8 @@ $(function(){
             
             // Update density map on each new fetch
             if (showAll && updateCountDensity == 0){
-              setDensityMap();  
+              setDensityMap(); 
+              updateCountDensity = 10;
             } else if (showAll && updateCountDensity != 0){
               updateCountDensity--;   
             };
