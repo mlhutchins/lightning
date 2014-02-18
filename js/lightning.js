@@ -32,7 +32,6 @@ $(function(){
     var speedFactor = 1; // Initial speed factor of 1
     var showBox = false; // Start with no subset box shown
     var showAll = false; // Don't show all loaded strokes on launch
-    var getStrokePoints = false; // Start off not accumulating strokes into a heatmap
     var runStart = false; // Return to start variable
     var loadLocal = false;
     var loadFile = [];
@@ -300,6 +299,8 @@ $(function(){
                
     // Make a heatmap from a set of points
     function setDensityMap(){
+        
+        strokePoints = [];
         
         $.each(locations, function(key, loc) {
        
@@ -951,10 +952,7 @@ $(function(){
             };
             
         };
-        
-        if (getStrokePoints){
-            strokePoints = [];
-        };
+    
      
 		// If strokes were removed increment firstTime by 60 seconds 
 		if (update_firstTime){
