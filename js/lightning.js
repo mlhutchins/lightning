@@ -12,7 +12,7 @@ $(function(){
     var endMag = 2; // Final marker size
     var decayTime = 0.5; // Decay of marker (size / second)
     var markerLifetime = (startMag - endMag) / decayTime; // Marker lifetime
-    var timeOffset = 720; // Initial Delay between display data and current time
+    var timeOffset = 1860; // Initial Delay between display data and current time
     var timeOffsetMin = timeOffset; // Minimum offset from real time
     var getDelay = 1; // interval between server fetches (s)
     var densityRadius = 25; // Radius of the heatmap (pixels)
