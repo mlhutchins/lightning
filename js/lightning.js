@@ -64,29 +64,38 @@ $(function(){
       {
         "elementType": "geometry",
         "stylers": [
-          { "lightness": -62 },
+          { "lightness": -10 },
           { "gamma": 1.37 },
           { "saturation": -29 },
-          { "weight": 0.5 },
+          { "weight": 1 },
           { "visibility": "on" }
         ]
-      },{
+      },
+      {
         "featureType": "road",
         "stylers": [
           { "visibility": "off" }
         ]
-      },{
+      },
+      {
         "featureType": "administrative",
         "stylers": [
           { "visibility": "off" }
         ]
-      },{
+      },
+      {
         "featureType": "administrative.country",
         "stylers": [
           { "visibility": "on" }
         ]
-      },{
-      }
+      },
+      {
+        "featureType": "administrative.province",
+        "stylers": [
+          { "visibility": "on" },
+          { "lightness": 25}
+        ]
+      },
     ];
 
     map.setOptions({styles:styles});
