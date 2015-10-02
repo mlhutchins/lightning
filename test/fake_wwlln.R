@@ -77,4 +77,39 @@ strokeText <- function(strokes) {
     
 }
 
+#' Generate WWLLN Data Every Minute
+#' 
+#' Create fake A files every minute in the specified directory for use in
+#' testing end to end map solutions
+#' 
+#' @export
+#' @param dataDir Directory to write files, default is data
+generateWWLLN <- function(dataDir = "data/") {
+
+    dir.create(dataDir, recursive = TRUE, showWarnings = FALSE)
+    
+    oldTime <- floor_date(now(tzone = "UTC"), unit = "minute")
+
+    while (TRUE) {
+        
+        text <- strokeText(newStrokes(n = 600, timeRange = 60))
+        
+        currentTime <- floor_date(now(tzone = "UTC"), unit = "minute")
+        
+        if (currentTime == oldTime) {
+            Sys.sleep(1)
+            next()
+        }
+        
+        aName <- sprintf("%sA%04g%02g%02g%02g%02g00.loc", dataDir,
+                         year(currentTime), month(currentTime), day(currentTime),
+                         hour(currentTime), minute(currentTime))
+        
+        writeLines(text, aName)
+        
+        oldTime <- currentTime
+        
+    }
+
+}
 
