@@ -34,7 +34,7 @@ newStrokes <- function(n = 1000) {
     uncertainty <- runif(n, 0, 30)
     
     strokes <- data.frame(
-        date = times,
+        datetime = times,
         lat = lat,
         lon = lon,
         uncertainty = uncertainty,
@@ -43,3 +43,39 @@ newStrokes <- function(n = 1000) {
     return(strokes)
     
 }
+
+#' Convert Stroke Dataframe To Text
+#' 
+#' Generate WWLLN formatted text from an R dataframe of stroke data
+#' 
+#' @export
+#' @param strokes Dataframe of strokes from \code{\link{newStrokes}} 
+strokeText <- function(strokes) {
+    
+    strokes$year <- year(strokes$date)
+    strokes$month <- month(strokes$date)
+    strokes$day <- day(strokes$date)
+    strokes$hour <- hour(strokes$date)
+    strokes$minute <- minute(strokes$date)
+    strokes$second <- second(strokes$date)
+
+    
+    makeLine <- function(stroke) {
+         
+        sprintf("%04g/%02g/%02g %02g:%02g:%f, %f, %f, %f, %g",
+                stroke$year, stroke$month, stroke$day, stroke$hour,
+                stroke$minute, stroke$second, 
+                stroke$lat, stroke$lon,
+                stroke$uncertainty, stroke$nstations)
+        
+    }
+    
+    text <- do.call('c', lapply(seq(1, nrow(strokes)), function(i){
+        makeLine(strokes[i, ])
+    }))
+    
+    return(text)
+    
+}
+
+
