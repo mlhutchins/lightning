@@ -11,10 +11,9 @@ if (!require(lubridate)) {
 #' 
 #' @export
 #' @param n Number strokes
-newStrokes <- function(n = 1000) {
+#' @param timeRange The span on time from now in which to generate fake data
+newStrokes <- function(n = 1000, timeRange = 60) {
 
-    timeRange <- 3600
-    
     ## Replicate chimneys
     lat <- rnorm(n, 0, 35)
     lon <- c(rnorm(floor(n/2), 10, 25),
