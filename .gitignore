@@ -4,3 +4,6 @@
 *log
 *swp
 data/current.json
+
+## R and Rstudio files
+.Rproj.user
